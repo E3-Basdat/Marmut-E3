@@ -16,9 +16,6 @@ const login: React.FC = () => {
 
                 <div className='flex flex-row gap-4 justify-center'>
                     <button type="submit" className="bg-primary text-white bg-[#355c7d] font-semibold rounded-lg w-1/4 py-4 mt-4">
-                        Register
-                    </button>
-                    <button type="submit" className="bg-primary text-white bg-[#355c7d] font-semibold rounded-lg w-1/4 py-4 mt-4">
                         Login
                     </button>
                 </div>
