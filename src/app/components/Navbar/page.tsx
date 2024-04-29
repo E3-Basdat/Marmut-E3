@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 
 
@@ -23,11 +23,13 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
 
 const Navbar = () => {
     const [userRole, setUserRole] = useState("normal");
-    const [isLoggedIn, setIsLoggedIn] = useState(true)
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
     // Function to update user role
     const updateUserRole = (role: string) => {
         setUserRole(role);
     };
+
+    const router = useRouter();
 
     const pathname = usePathname();
 
@@ -48,7 +50,7 @@ const Navbar = () => {
                     <h1 className="pl-2 text-center text-2xl font-bold text-[#1db954]">Marmut</h1>
                 </div>
                 <div className="flex gap-16 text-center items-center">
-                    {userRole === "normal" && (
+                    {isLoggedIn && userRole === "normal" && (
                         <>
                             <NavLink href="/dashboard" isActive={pathname === "/dashboard"}>
                                 Dashboard
@@ -68,19 +70,19 @@ const Navbar = () => {
                         </>
                     )}
 
-                    {userRole === "premium" && (
+                    {isLoggedIn && userRole === "premium" && (
                         <NavLink href="/downloaded-songs" isActive={pathname === "/downloaded-songs"}>
                             Kelola Downloaded Songs
                         </NavLink>
                     )}
 
-                    {userRole === "podcaster" && (
+                    {isLoggedIn && userRole === "podcaster" && (
                         <NavLink href="/podcast" isActive={pathname === "/podcast"}>
                             Kelola Podcast
                         </NavLink>
                     )}
 
-                    {userRole === "artist" && (
+                    {isLoggedIn && userRole === "artist" && (
                         <>
                             <NavLink href="/album-and-songs" isActive={pathname === "/album-and-songs"}>
                                 Kelola Album & Songs
@@ -91,7 +93,7 @@ const Navbar = () => {
                         </>
                     )}
 
-                    {userRole === "label" && (
+                    {isLoggedIn && userRole === "label" && (
                         <NavLink href="/album" isActive={pathname === '/album'}>
                             Kelola Album
                         </NavLink>
@@ -99,19 +101,15 @@ const Navbar = () => {
 
                     {!isLoggedIn && (
                         <div className="flex flex-row gap-4">
-                            <Link href="/auth/login">
+                            <button className="px-4 py-2  bg-green-200 rounded-lg text-white-100" onClick={()=> router.push("/auth/login")}>
                                 Login
-                            </Link>
-                            <Link href="/auth/register">
+                            </button>
+                            <button className="px-4 py-2 bg-green-200 rounded-lg text-white-100" onClick={()=> router.push("/auth/register")}>
                                 Register
-                            </Link>
+                            </button>
                         </div>
                     )}
-
                 </div>
-
-
-
             </div>
         </nav>
     );
