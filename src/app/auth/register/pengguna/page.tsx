@@ -53,7 +53,7 @@ const Pengguna: React.FC = () => {
                 </div>
 
                 <div className='mb-4'>
-                    <select name="gender" value={gender} onChange={(e) => setGender(e.target.value)} className={`font-bold ${gender ? 'text-white-100' : 'text-gray-400'} bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-3`}>
+                    <select name="gender" value={gender} onChange={(e) => setGender(e.target.value)} className={`font-bold ${gender ? 'text-white-100' : 'text-gray-400'} select-box bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-3`}>
                         <option value="">Jenis Kelamin</option>
                         <option value="laki-laki" className="text-white-100">Laki-laki</option>
                         <option value="perempuan" className="text-white-100">Perempuan</option>
