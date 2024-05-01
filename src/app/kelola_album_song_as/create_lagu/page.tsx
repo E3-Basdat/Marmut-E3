@@ -27,7 +27,7 @@ const create_album: React.FC = () => {
             </div>
         <></>
             <div className='mb-4'>
-            <select name="label" value={label} onChange={(e) => setLabel(e.target.value)} className={`font-bold ${label ? 'text-black' : 'text-gray-400'} select-box bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-3`}>
+            <select name="label" value={label} onChange={(e) => setLabel(e.target.value)} className={`font-bold ${label ? 'text-white' : 'text-gray-400'} select-box bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-3`}>
                     <option value="">Label</option>
                     <option value="label1" className="text-white-100">Label1</option>
                     <option value="label2" className="text-white-100">Label2</option>
