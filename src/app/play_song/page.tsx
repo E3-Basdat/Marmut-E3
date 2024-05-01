@@ -39,7 +39,7 @@ const PlaySong: React.FC = () => {
 
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center gap-16 font-bold p-48">
-            <h1 className="text-3xl">User Playlist</h1>
+            <h1 className="text-3xl">Song Detail</h1>
             <div className="flex flex-col justify-start w-full">
                 <div className="mb-2 text-left"><span className="font-bold">Judul:</span> Back to December</div>
                 <div className="mb-2 text-left"><span className="font-bold">Genre:</span> Pop</div>
@@ -107,15 +107,21 @@ const PlaySong: React.FC = () => {
 
             {/* Download Popup */}
             {showDownloadPopup && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-                    <div className="bg-white p-8 rounded-lg">
-                        <h2 className="text-2xl mb-4">Download Popup</h2>
-                        <button onClick={() => setShowDownloadPopup(false)} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-2 px-4">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="bg-white p-8 rounded-lg">
+            <h2 className="text-2xl mb-4">Berhasil mengunduh Lagu dengan judul Back to December!</h2>
+            <div className="flex flex-col gap-4">
+                <button className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-2 px-4">
+                    Lihat Daftar Download
+                </button>
+                <button onClick={() => setShowDownloadPopup(false)} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-2 px-4">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+)}
+
 
             {messageConfirmPlaylist && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
