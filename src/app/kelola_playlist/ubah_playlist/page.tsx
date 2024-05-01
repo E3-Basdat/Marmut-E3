@@ -15,7 +15,6 @@ const UbahPlaylist : React.FC = () => {
         setDeskripsiPlaylist("");
 
         try {
-            // Lakukan apa yang diperlukan dengan formData, seperti mengirimnya ke server
             console.log("FormData:", formData);
         } catch (err) {
             throw new Error(`Error: ${err}`);
