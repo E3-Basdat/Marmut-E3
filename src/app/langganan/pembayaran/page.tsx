@@ -11,15 +11,15 @@ const page = () => {
     
     return (
     <main className="flex min-h-screen text-white-100 flex-col items-center gap-8  p-48"> 
-        <h1 className="text-4xl font-bold">Pembayaran Paket</h1> 
+        <h1 className="text-4xl font-bold text-center">Pembayaran Paket</h1> 
         <div className="flex flex-col gap-8 w-full max-w-4xl justify-center items-center">
             <label>Informasi Paket yang Ingin Dibeli:</label>
             <div className="overflow-x-auto w-full">
                 <table className="w-full text-lg">
                     <thead>
                         <tr className="bg-gray-800 text-white">
-                            <th className="py-3 px-5">Jenis</th>
-                            <th className="py-3 px-5">Harga</th>
+                            <th className="rounded-tl-lg py-3 px-5">Jenis</th>
+                            <th className="rounded-tr-lg py-3 px-5">Harga</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -41,7 +41,7 @@ const page = () => {
                     </ul>
                 </div>
             </label>
-            <button onClick={handleSubmit} className="bg-green-200 text-white font-bold py-2 px-4 rounded">
+            <button onClick={handleSubmit} className="px-4 py-2  bg-green-200 rounded-lg text-white-100 font-bold">
                 Submit
             </button>
         </div>
