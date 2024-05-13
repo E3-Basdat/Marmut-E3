@@ -1,12 +1,12 @@
 "use client"
 import React, { useState } from "react";
 import { registerUser } from "@/app/actions/register";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 const Pengguna: React.FC = () => {
     const[gender, setGender] = useState<string>("")
     const[tanggal_lahir, setTanggalLahir] = useState<string>("")
-    
-
-    
+    const router = useRouter();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         let genderValue: number;
@@ -18,14 +18,10 @@ const Pengguna: React.FC = () => {
         }
         const formData = new FormData(event.target as HTMLFormElement);
 
-        console.log(formData.get('tanggal_lahir'))
-        console.log(formData.get('gender'))
-        console.log(formData.get('is_podcaster'))   
-        console.log(formData.get('is_artist'))
-        console.log(formData.get('is_songwriter'))
-
         try{
             await registerUser(formData);
+            toast.success("User registered successfully");
+            router.replace("/auth/login");
         }
 
         catch(err){
@@ -34,8 +30,6 @@ const Pengguna: React.FC = () => {
         
         
     };
-
-   
 
     return (
         <div className='flex flex-col text-white-100 text-center items-center gap-16 px-8 py-32 bg-white font-bold min-h-screen '>
