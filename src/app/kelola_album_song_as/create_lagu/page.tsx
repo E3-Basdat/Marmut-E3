@@ -12,7 +12,7 @@ const create_album: React.FC = () => {
         console.log({ title, label });
 
         try {
-            //
+            
         } catch (err) {
             throw new Error(`Error: ${err}`);
         }
