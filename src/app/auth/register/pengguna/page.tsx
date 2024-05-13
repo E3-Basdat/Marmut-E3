@@ -4,7 +4,7 @@ import { registerUser } from "@/app/actions/register";
 const Pengguna: React.FC = () => {
     const[gender, setGender] = useState<string>("")
     const[tanggal_lahir, setTanggalLahir] = useState<string>("")
-
+    
 
     
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -40,19 +40,23 @@ const Pengguna: React.FC = () => {
     return (
         <div className='flex flex-col text-white-100 text-center items-center gap-16 px-8 py-32 bg-white font-bold min-h-screen '>
             <h1 className="text-3xl">Register Form Pengguna</h1>
-            <form className='flex flex-col w-1/2' onSubmit={handleSubmit}>
-                <div className='mb-4'>
+            <form className='flex flex-col w-1/2 text-left' onSubmit={handleSubmit}>
+                <div className='mb-4 '>
+                    <label>Email</label>
                     <input type="email" placeholder="Email" name="email" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
 
                 <div className='mb-4'>
+                    <label>Password</label>
                     <input type="password" placeholder="Password" name="password" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
                 <div className='mb-4'>
+                    <label>Nama</label>
                     <input type="text" placeholder="Nama" name="nama" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
 
                 <div className='mb-4'>
+                    <label>Jenis Kelamin</label>
                     <select name="gender" value={gender} onChange={(e) => setGender(e.target.value)} className={`font-bold ${gender ? 'text-white-100' : 'text-gray-400'} select-box bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-3`}>
                         <option value="">Jenis Kelamin</option>
                         <option value="laki-laki" className="text-white-100">Laki-laki</option>
@@ -61,14 +65,17 @@ const Pengguna: React.FC = () => {
                 </div>
 
                 <div className='mb-4'>
+                <label>Tempat Lahir</label>
                     <input type="text" placeholder="Tempat Lahir" name="tempat_lahir" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
 
                 <div className='mb-4'>
+                <label>Tanggal Lahir</label>
                     <input type="date" name="tanggal_lahir" placeholder="Tanggal Lahir" value={tanggal_lahir} onChange={(e) => setTanggalLahir(e.target.value)} className={`font-bold ${tanggal_lahir ? 'text-white-100' : 'text-gray-400'} bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4`} />
                 </div>
 
                 <div className='mb-4'>
+                <label>Kota Asal</label>
                     <input type="text" placeholder="Kota Asal" name="kota_asal" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
 
