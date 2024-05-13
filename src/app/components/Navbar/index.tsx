@@ -22,11 +22,11 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
 
 
 const Navbar = () => {
-    const [userRole, setUserRole] = useState("normal");
+    const [user, setUser] = useState("label");
     const [isLoggedIn, setIsLoggedIn] = useState(false)
     // Function to update user role
     const updateUserRole = (role: string) => {
-        setUserRole(role);
+        setUser(role);
     };
 
     const router = useRouter();
@@ -34,7 +34,7 @@ const Navbar = () => {
     const pathname = usePathname();
 
     return (
-        <nav className="fixed w-full text-[#1db954] bg-primary shadow-md">
+        <nav className="fixed z-40 w-full text-[#1db954] bg-primary shadow-md">
             <div className="flex justify-between px-12 py-4 font-bold ">
                 <div className="flex flex-ro items-center">
                     <NavLink href="/" isActive={pathname === "/"}>
@@ -50,7 +50,8 @@ const Navbar = () => {
                     <h1 className="pl-2 text-center text-2xl font-bold text-[#1db954]">Marmut</h1>
                 </div>
                 <div className="flex gap-16 text-center items-center">
-                    {isLoggedIn && userRole === "normal" && (
+                    {isLoggedIn && (user === "normal" || user==="premium"  || 
+                    user==="artist" || user==="songwriter") && (
                         <>
                             <NavLink href="/dashboard" isActive={pathname === "/dashboard"}>
                                 Dashboard
@@ -70,19 +71,19 @@ const Navbar = () => {
                         </>
                     )}
 
-                    {isLoggedIn && userRole === "premium" && (
+                    {isLoggedIn && user === "premium" && (
                         <NavLink href="/downloaded-songs" isActive={pathname === "/downloaded-songs"}>
                             Kelola Downloaded Songs
                         </NavLink>
                     )}
 
-                    {isLoggedIn && userRole === "podcaster" && (
+                    {isLoggedIn && user === "podcaster" && (
                         <NavLink href="/podcast" isActive={pathname === "/podcast"}>
                             Kelola Podcast
                         </NavLink>
                     )}
 
-                    {isLoggedIn && userRole === "artist" && (
+                    {isLoggedIn && user === "artist" && (
                         <>
                             <NavLink href="/album-and-songs" isActive={pathname === "/album-and-songs"}>
                                 Kelola Album & Songs
@@ -93,7 +94,7 @@ const Navbar = () => {
                         </>
                     )}
 
-                    {isLoggedIn && userRole === "label" && (
+                    {isLoggedIn && user === "label" && (
                         <NavLink href="/album" isActive={pathname === '/album'}>
                             Kelola Album
                         </NavLink>

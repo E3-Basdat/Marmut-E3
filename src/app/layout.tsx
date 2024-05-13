@@ -21,7 +21,7 @@ export default function RootLayout({
     </head>
     <body className="font-sans antialiased bg-primary">
       <Navbar />
-      <main className="bg-primary">{children}</main>
+      <main className="bg-primary min-h-screen">{children}</main>
     </body>
   </html>
   );
