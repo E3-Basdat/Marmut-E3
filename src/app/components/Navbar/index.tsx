@@ -1,10 +1,9 @@
 "use client";
-import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
-
-
+import { useAuth } from "@/app/contexts/AuthContext";
+import React from "react";
 
 interface NavLinkProps {
     href: string; // Specify href as a string type
@@ -22,17 +21,15 @@ function NavLink({ href, isActive, children }: NavLinkProps) {
 
 
 const Navbar = () => {
-    const [user, setUser] = useState("label");
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    // Function to update user role
-    const updateUserRole = (role: string) => {
-        setUser(role);
-    };
-
+    const { isAuthenticated, role, logout } = useAuth();
     const router = useRouter();
-
     const pathname = usePathname();
 
+
+    const [isLoaded, setIsLoaded] = useState(false);
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
     return (
         <nav className="fixed z-40 w-full text-[#1db954] bg-primary shadow-md">
             <div className="flex justify-between px-12 py-4 font-bold ">
@@ -50,66 +47,70 @@ const Navbar = () => {
                     <h1 className="pl-2 text-center text-2xl font-bold text-[#1db954]">Marmut</h1>
                 </div>
                 <div className="flex gap-16 text-center items-center">
-                    {isLoggedIn && (user === "normal" || user==="premium"  || 
-                    user==="artist" || user==="songwriter") && (
+                    {isLoaded &&
                         <>
-                            <NavLink href="/dashboard" isActive={pathname === "/dashboard"}>
-                                Dashboard
-                            </NavLink>
-                            <NavLink href="/chart" isActive={pathname === "/chart"} >
-                                Chart
-                            </NavLink>
-                            <NavLink href="/search" isActive={pathname === "/search"}>
-                                Search Bar
-                            </NavLink>
-                            <NavLink href="/playlist" isActive={pathname === "/playlist"}>
-                                Kelola Playlist
-                            </NavLink>
-                            <NavLink href="/subscription" isActive={pathname === "/subscription"}>
-                                Langganan Paket
-                            </NavLink>
+                            {isAuthenticated ? (
+                                <>
+                                    {role.includes("pengguna") && (
+                                        <>
+                                            <NavLink href="/dashboard" isActive={pathname === "/dashboard"}>
+                                                Dashboard
+                                            </NavLink>
+                                            <NavLink href="/chart" isActive={pathname === "/chart"}>
+                                                Chart
+                                            </NavLink>
+                                            <NavLink href="/search" isActive={pathname === "/search"}>
+                                                Search Bar
+                                            </NavLink>
+                                            <NavLink href="/playlist" isActive={pathname === "/playlist"}>
+                                                Kelola Playlist
+                                            </NavLink>
+                                            <NavLink href="/subscription" isActive={pathname === "/subscription"}>
+                                                Langganan Paket
+                                            </NavLink>
+                                        </>
+                                    )}
+                                    {role.includes("premium") && (
+                                        <NavLink href="/downloaded-songs" isActive={pathname === "/downloaded-songs"}>
+                                            Kelola Downloaded Songs
+                                        </NavLink>
+                                    )}
+                                    {role.includes("podcaster") && (
+                                        <NavLink href="/podcast/list" isActive={pathname === "/podcast/list"}>
+                                            Kelola Podcast
+                                        </NavLink>
+                                    )}
+                                    {(role.includes("artist") || role.includes("songwriter")) && (
+                                        <NavLink href="/album-and-songs" isActive={pathname === "/album-and-songs"}>
+                                            Kelola Album & Songs
+                                        </NavLink>
+                                    )}
+                                    {role.includes("label") && (
+                                        <NavLink href="/album" isActive={pathname === '/album'}>
+                                            Kelola Album
+                                        </NavLink>
+                                    )}
+                                    {(role.includes("artist") || role.includes("songwriter") || role.includes("label")) && (
+                                        <NavLink href="/royalty" isActive={pathname === "/royalty"}>
+                                            Cek Royalti
+                                        </NavLink>
+                                    )}
+                                    <button className="px-4 py-2 bg-green-200 rounded-lg text-white-100" onClick={logout}>
+                                        Logout
+                                    </button>
+                                </>
+                            ) : (
+                                <div className="flex flex-row gap-4">
+                                    <button className="px-4 py-2 bg-green-200 rounded-lg text-white-100" onClick={() => router.push("/auth/login")}>
+                                        Login
+                                    </button>
+                                    <button className="px-4 py-2 bg-green-200 rounded-lg text-white-100" onClick={() => router.push("/auth/register")}>
+                                        Register
+                                    </button>
+                                </div>
+                            )}
                         </>
-                    )}
-
-                    {isLoggedIn && user === "premium" && (
-                        <NavLink href="/downloaded-songs" isActive={pathname === "/downloaded-songs"}>
-                            Kelola Downloaded Songs
-                        </NavLink>
-                    )}
-
-                    {isLoggedIn && user === "podcaster" && (
-                        <NavLink href="/podcast" isActive={pathname === "/podcast"}>
-                            Kelola Podcast
-                        </NavLink>
-                    )}
-
-                    {isLoggedIn && user === "artist" && (
-                        <>
-                            <NavLink href="/album-and-songs" isActive={pathname === "/album-and-songs"}>
-                                Kelola Album & Songs
-                            </NavLink>
-                            <NavLink href="/royalty" isActive={pathname === "/royalty"}>
-                                Cek Royalti
-                            </NavLink>
-                        </>
-                    )}
-
-                    {isLoggedIn && user === "label" && (
-                        <NavLink href="/album" isActive={pathname === '/album'}>
-                            Kelola Album
-                        </NavLink>
-                    )}
-
-                    {!isLoggedIn && (
-                        <div className="flex flex-row gap-4">
-                            <button className="px-4 py-2  bg-green-200 rounded-lg text-white-100" onClick={()=> router.push("/auth/login")}>
-                                Login
-                            </button>
-                            <button className="px-4 py-2 bg-green-200 rounded-lg text-white-100" onClick={()=> router.push("/auth/register")}>
-                                Register
-                            </button>
-                        </div>
-                    )}
+                    }
                 </div>
             </div>
         </nav>
