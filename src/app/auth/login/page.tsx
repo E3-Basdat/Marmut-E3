@@ -16,11 +16,13 @@ const Login: React.FC = () => {
         try {
             const email = formData.get("email") as string;
             const password = formData.get("password") as string;
+            await login(email, password);
             toast.success(`Hello ${email}`)
             router.push('/dashboard')
 
 
         } catch (error){
+            console.log("hallo")
             console.error("Failed to login");
         }
     }
