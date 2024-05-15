@@ -30,7 +30,6 @@ const Navbar = () => {
     useEffect(() => {
         setIsLoaded(true);
     }, []);
-    console.log(isAuthenticated);
     return (
         <nav className="fixed z-40 w-full text-[#1db954] bg-primary shadow-md">
             <div className="flex justify-between px-12 py-4 font-bold ">
@@ -118,4 +117,4 @@ const Navbar = () => {
     );
 };
 
-export default React.memo(Navbar);
+export default Navbar;
