@@ -3,7 +3,7 @@ import { sql } from "@vercel/postgres";
 
 export async function getAllPaket() {
     try {
-        const result = await sql`SELECT * FROM paket`;
+        const result = await sql`SELECT * FROM paket;`;
         return result;
     } catch (err) {
         throw new Error(`Error: ${err}`);
