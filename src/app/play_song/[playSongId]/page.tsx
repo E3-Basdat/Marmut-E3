@@ -1,11 +1,10 @@
 "use client";
-import { useRouter, useParams } from "next/navigation"; 
+import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { playSong } from "../actions/playSong"; 
+import { playSong } from "@/app/actions/playSong"; // Adjust the import path as necessary
 
-const PlaySong: React.FC = () => {
+const PlaySong = ({ params }: { params: { playSongId: string } }) => {
     const router = useRouter();
-    const { id } = useParams();
     const [play, setPlay] = useState(50);
     const [showAddToPlaylistPopup, setShowAddToPlaylistPopup] = useState(false);
     const [showDownloadPopup, setShowDownloadPopup] = useState(false);
@@ -16,14 +15,10 @@ const PlaySong: React.FC = () => {
     useEffect(() => {
         const fetchSongData = async () => {
             try {
-                // Ensure id is a single string
-                if (id && typeof id === "string") { 
-                    const song = await playSong(id); // Passing id as a string
-                    if (song) {
-                        setSongData(song); 
-                    } else {
-                        console.error("Song not found");
-                    }
+                if (params.playSongId) {
+                    const song = await playSong(params.playSongId); 
+                    console.log(song);
+                    setSongData(song); 
                 } else {
                     console.error("Invalid song ID");
                 }
@@ -33,7 +28,7 @@ const PlaySong: React.FC = () => {
         };
     
         fetchSongData();
-    }, [id]); // Add id as dependency to re-fetch when id changes
+    }, [params.playSongId]); // Add playSongId as dependency to re-fetch when it changes
     
     const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
         setPlay(Number(event.target.value));
@@ -69,7 +64,7 @@ const PlaySong: React.FC = () => {
             {songData ? (
                 <div className="flex flex-col justify-start w-full">
                     <div className="mb-2 text-left"><span className="font-bold">Judul:</span> {songData.judul}</div>
-                    <div className="mb-2 text-left"><span className="font-bold">Tanggal Rilis:</span> {songData.tanggal_rilis}</div>
+                    <div className="mb-2 text-left"><span className="font-bold">Tanggal Rilis:</span> {songData.tanggal_rilis.toString()}</div>
                     <div className="mb-2 text-left"><span className="font-bold">Tahun:</span> {songData.tahun}</div>
                     <div className="mb-2 text-left"><span className="font-bold">Durasi:</span> {songData.durasi}</div>
                     <div className="mb-2 text-left"><span className="font-bold">Total Play:</span> {songData.total_play}</div>

@@ -1,17 +1,43 @@
+import React, { useState, useEffect } from "react";
+import { listLagu,tambahLagu } from "@/app/actions/kelolaPlaylist";
 
-"use client";
-import React, { useState } from "react";
 
-const TambahLagu: React.FC = () => {
+const TambahLagu= ({ params }: { params: { tambahLaguId: string } }) => {
     const [selectedSong, setSelectedSong] = useState<string>("");
+    const [songs, setSongs] = useState<string[]>([]);
 
-    const songs = ["Sparks Now", "Dear John", "The Story of Us"];
+    useEffect(() => {
+        
+        const fetchSongs = async () => {
+            try {
+                const data = await listLagu();
+                if (data) {
+                    const songList = data.map((song: any) => `${song.judul_lagu} - ${song.nama_penyanyi}`);
+                    setSongs(songList);
+                }
+            } catch (error) {
+                console.error("Failed to fetch songs:", error);
+            }
+        };
+
+        fetchSongs();
+    }, []); 
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Lagu yang dipilih:", selectedSong);
         
+        const formData = new FormData(event.target as HTMLFormElement);
+        formData.append("selectedSong", selectedSong);
+    
+        try {
+            await tambahLagu(formData, params.tambahLaguId);
+            console.log("Lagu berhasil ditambahkan.");
+        } catch (error) {
+            console.error("Gagal menambahkan lagu:", error);
+        }
     };
+    
 
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center justify-center gap-16 font-bold p-48">
