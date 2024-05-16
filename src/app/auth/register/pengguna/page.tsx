@@ -28,7 +28,7 @@ const Pengguna: React.FC = () => {
             throw new Error(`Error: ${err}`);
         }
         
-        
+
     };
 
     return (
