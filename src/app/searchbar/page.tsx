@@ -8,7 +8,7 @@ interface SearchResult {
   type: string;
   title: string;
   by: string;
-  id: string; // Assuming each result has a unique ID for navigation purposes
+  id: string; 
 }
 
 const SearchBar = () => {
@@ -37,7 +37,7 @@ const SearchBar = () => {
 
   const handleLihat = (item: SearchResult) => {
     // Handle the view action, navigate to the detail page based on item type
-    router.push(`/detail/${item.id}`);
+    router.push(`/detail_lagu/${item.id}`);
   };
 
   return (

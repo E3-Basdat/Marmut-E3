@@ -2,15 +2,22 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
+import { getDownloadedSongs } from '../actions/downloadedsongs';
+
+interface downloadedsongs{
+    title : string; 
+    by : string;
+    id : string;
+}
 
 function DownloadedSongs() {
-    const { isAuthenticated, email } = useAuth(); 
+    const { isAuthenticated, email, role } = useAuth(); 
     const router = useRouter();
     const [notification, setNotification] = useState('');
+    const [song, setSong] = useState<downloadedsongs[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
     const handleHapus = () => {
-        
         setNotification('Berhasil menghapus lagu dari daftar unduhan!'); // Set the notification message
         setTimeout(() => setNotification(''), 3000); // Hide the notification after 3 seconds
     };
@@ -20,6 +27,17 @@ function DownloadedSongs() {
         // router.push('/path/to/specific/song');
     };
 
+    async function getSongs(){
+        const result = await getDownloadedSongs(email);
+        setSong(result.rows as downloadedsongs[]);
+    }
+
+    useEffect(() => {
+        if (email) {
+            getSongs();
+        }
+    }, [email]);
+
     useEffect(() => {
         setIsLoaded(true);
       }, []);
@@ -28,6 +46,9 @@ function DownloadedSongs() {
         if (!isAuthenticated) {
             router.push("/auth/login");
         }
+        // } else if (!role.includes("premium")){
+        //     router.push("/langganan")
+        // }
     }
 
     return (
@@ -40,15 +61,14 @@ function DownloadedSongs() {
                             <tr className="bg-gray-800 text-white">
                                 <th className="rounded-tl-lg py-3 px-5">Judul Lagu</th>
                                 <th className="py-3 px-5">Oleh</th>
-                                <th className="py-3 px-5">Tanggal Download</th>
                                 <th className="rounded-tr-lg py-3 px-5">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="py-2 px-4 text-center">Song 1</td>
-                                <td className="py-2 px-4 text-center">Artist 1</td>
-                                <td className="py-2 px-4 text-center">20/02/24</td>
+                            {song.map((item, index) => (
+                                <tr key={index}>
+                                <td className="py-2 px-4 text-center">{item.title}</td>
+                                <td className="py-2 px-4 text-center">{item.by}</td>
                                 <td className="py-2 px-4 flex justify-around">
                                     <button onClick={handleLihat} className="btn btn-ghost btn-s text-lg h-full text-blue-500 hover:text-white bg-transparent">
                                         Lihat
@@ -58,7 +78,8 @@ function DownloadedSongs() {
                                     </button>
                                 </td>
                             </tr>
-                            {/* Additional rows as needed */}
+                            ))}
+                            
                         </tbody>
                     </table>
                     {notification && (
