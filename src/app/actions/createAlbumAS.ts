@@ -84,16 +84,16 @@ export async function createAlbumAS(formData: FormData) {
     const tanggalRilis = new Date();
     const tanggalRilisString = tanggalRilis.toISOString();
     const tahunRilis = tanggalRilis.getFullYear();
-    const durasi = formData.get('durasi') as string;
 
     const artistName = formData.get('artist') as string;
     const artistId = await getArtistIdByName(artistName);
     if (!artistId) {
         throw new Error("Artist not Found.");
     }
-    
+
     const songwriters = JSON.parse(formData.get('songwriters') as string);
     const genres = JSON.parse(formData.get('genres') as string);
+    const durasi = formData.get('durasi') as string;
 
     try {
         await sql`

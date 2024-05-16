@@ -4,7 +4,7 @@ import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenr
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-const CreateAlbum: React.FC = () => {
+const create_album: React.FC = () => {
     const [label, setLabel] = useState<string>("");
     const [labels, setLabels] = useState<string[]>([]);
     const [artist, setArtist] = useState<string[]>([]);
@@ -129,4 +129,4 @@ const CreateAlbum: React.FC = () => {
     );
 }
 
-export default CreateAlbum;
+export default create_album;
