@@ -1,19 +1,32 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getSearch } from '../actions/search';
+import { useAuth } from '../contexts/AuthContext';
 
 interface SearchResult {
-  tipe: string;
-  judul: string;
-  oleh: string;
+  type: string;
+  title: string;
+  by: string;
   id: string; // Assuming each result has a unique ID for navigation purposes
 }
 
 const SearchBar = () => {
+  const { isAuthenticated } = useAuth(); 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<SearchResult[]>([]);
   const router = useRouter();
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
+  if (isLoaded) {
+      if (!isAuthenticated) {
+          router.push("/auth/login");
+      }
+  }
 
   const handleSearch = async () => {
     if (!query) return;
@@ -54,9 +67,9 @@ const SearchBar = () => {
             <tbody>
               {results.map((item, index) => (
                 <tr key={index}>
-                  <td className="py-2 px-4 text-center">{item.tipe}</td>
-                  <td className="py-2 px-4 text-center">{item.judul}</td>
-                  <td className="py-2 px-4 text-center">{item.oleh}</td>
+                  <td className="py-2 px-4 text-center">{item.type}</td>
+                  <td className="py-2 px-4 text-center">{item.title}</td>
+                  <td className="py-2 px-4 text-center">{item.by}</td>
                   <td className="py-2 px-4 text-center">
                     <button onClick={() => handleLihat(item)} className="btn btn-ghost btn-s text-lg w-full h-full text-green-100 hover:text-white bg-transparent">
                       Lihat

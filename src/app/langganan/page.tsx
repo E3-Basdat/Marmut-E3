@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from "next/navigation";
 import { getAllPaket } from '../actions/langganan';
+import { useAuth } from '../contexts/AuthContext';
 
 interface Paket {
     jenis: string;
@@ -9,8 +10,10 @@ interface Paket {
 }
 
 const TabelLangganan = () => {
+    const { isAuthenticated } = useAuth(); 
     const router = useRouter();
     const [paket, setPaket] = useState<Paket[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const handleSubscribe = (selectedPaket: Paket) => {
         const query = `?jenis=${encodeURIComponent(selectedPaket.jenis)}&harga=${encodeURIComponent(selectedPaket.harga.toString())}`;
@@ -28,8 +31,15 @@ const TabelLangganan = () => {
     }
 
     useEffect(() => {
+        setIsLoaded(true);
         getPaket();
     }, []);
+
+    if (isLoaded) {
+        if (!isAuthenticated) {
+            router.push("/auth/login");
+        }
+    }
 
     return (
         <main className="flex min-h-screen text-white-100 flex-col items-center gap-20 p-48"> 

@@ -1,13 +1,16 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '../contexts/AuthContext';
 
 function DownloadedSongs() {
+    const { isAuthenticated, email } = useAuth(); 
     const router = useRouter();
     const [notification, setNotification] = useState('');
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const handleHapus = () => {
-        // Perform deletion logic (e.g., call API to delete the song)
+        
         setNotification('Berhasil menghapus lagu dari daftar unduhan!'); // Set the notification message
         setTimeout(() => setNotification(''), 3000); // Hide the notification after 3 seconds
     };
@@ -16,6 +19,16 @@ function DownloadedSongs() {
         // TODO: Routing to specific song page
         // router.push('/path/to/specific/song');
     };
+
+    useEffect(() => {
+        setIsLoaded(true);
+      }, []);
+    
+    if (isLoaded) {
+        if (!isAuthenticated) {
+            router.push("/auth/login");
+        }
+    }
 
     return (
         <main className="flex min-h-screen text-white flex-col items-center gap-20 p-48">

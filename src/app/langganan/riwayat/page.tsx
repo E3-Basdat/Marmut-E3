@@ -1,13 +1,34 @@
 "use client"
+import { useAuth } from '@/app/contexts/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 function riwayatLangganan() {
+    const { isAuthenticated, email } = useAuth(); 
     const router = useRouter();
+    const [isLoaded, setIsLoaded] = useState(false);
+
     const handleKembali = () => {
         router.push('/langganan');
+        
     };
+
+    async function getRiwayat() {
+ 
+    }
+
+    useEffect(() => {
+        setIsLoaded(true);
+        getRiwayat();
+    }, []);
+
+    if (isLoaded) {
+        if (!isAuthenticated) {
+            router.push("/auth/login");
+        }
+    }
+
     /* TODO: fetch data transaksi user*/
 
     return (
