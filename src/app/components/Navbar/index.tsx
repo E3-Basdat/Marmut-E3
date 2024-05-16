@@ -24,8 +24,6 @@ const Navbar = () => {
     const { isAuthenticated, role, logout } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
-
-
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         setIsLoaded(true);

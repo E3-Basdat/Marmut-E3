@@ -2,9 +2,11 @@
 
 import React from 'react';
 import { useState } from "react";
+import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
     const [user, setUser] = useState("podcaster");
+    
     const [userData, setUserData] = useState({
         city: "Your City",
         gender: "Male",
@@ -12,6 +14,7 @@ const Dashboard: React.FC = () => {
         dateOfBirth: "Your Date of Birth",
         role: "Artist, Songwriter"
     });
+    const {email,idLabel} = useAuth();
 
     return (
         <div>
@@ -20,7 +23,8 @@ const Dashboard: React.FC = () => {
                     <p>Profile</p>
                     <h1 className="text-7xl font-bold">Venedict Chen</h1>
                     <div className='flex flex-col gap-4'>
-                        <p>venedictchen@gmail.com</p>
+                        <p>{idLabel}</p>
+                        <p>{email}</p>
                         {!(user==="label") && (
                             <div className='flex flex-row'>
                                 <ul className="list-disc pl-4">
