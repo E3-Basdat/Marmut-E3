@@ -7,8 +7,6 @@ export async function loginUser(email: string, password: string) {
         SELECT COUNT(*) FROM AKUN
         WHERE email=${email} AND password=${password}
         `;
-
-        console.log(rows[0]);
      
         if (rows[0].count == 1) {
             const roles: ('' | 'pengguna' | 'podcaster' | 'songwriter' | 'artist' | 'premium')[] = [];
@@ -51,7 +49,7 @@ export async function loginUser(email: string, password: string) {
         return null;
 
     } catch (error: any) {
-        console.error("Failed todawdwadwa login:", error);
+        console.error("Failed to ogin:", error);
         throw error;
     }
 }

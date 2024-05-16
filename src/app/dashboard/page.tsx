@@ -6,6 +6,7 @@ import { useAuth } from '../contexts/AuthContext';
 
 const Dashboard: React.FC = () => {
     const [user, setUser] = useState("podcaster");
+    
     const [userData, setUserData] = useState({
         city: "Your City",
         gender: "Male",
@@ -14,8 +15,7 @@ const Dashboard: React.FC = () => {
         role: "Artist, Songwriter"
     });
     const {email,idLabel} = useAuth();
-    console.log("ini")
-    console.log(email);
+
     return (
         <div>
             <div className="flex flex-col text-white-100 py-24 min-h-screen gap-4">
