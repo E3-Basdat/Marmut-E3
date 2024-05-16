@@ -16,7 +16,7 @@ export async function registerUser(formData: FormData) {
     const is_verified = true;
 
     const genderValue = gender === 'laki-laki' ? 0 : 1;
-    console.log(formData.get('isPodcaster'))
+
     try {
 
         if (isArtist || isSongwriter || isPodcaster) {
