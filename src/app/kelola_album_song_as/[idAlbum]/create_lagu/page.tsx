@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 const create_album: React.FC = () => {
     const router = useRouter();
     const params = useParams();
-    const{idAlbum} = params;
+    const{ idAlbum } = params;
     
     const [title, setTitle] = useState<string>("");
     const [label, setLabel] = useState<string>("");
