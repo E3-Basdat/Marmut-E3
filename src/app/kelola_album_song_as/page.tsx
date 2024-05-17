@@ -2,10 +2,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
-import { fetchAlbums , deleteAlbum } from "../actions/kelolaAlbumAS";
+import { deleteAlbum, fetchAlbumsArtist, fetchAlbumsSongwriter } from "../actions/kelolaAlbumAS";
 import { useAuth } from "../contexts/AuthContext";
 
 interface Album {
+    id: string;
     judul: string;
     namaLabel: string;
     jumlahLagu: number;
@@ -21,8 +22,13 @@ const kelola_album_song_as: React.FC = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const fetchedAlbums = await fetchAlbums();
-                setAlbums(fetchedAlbums);
+                if (role.includes('artist')) {
+                    const fetchedAlbums = await fetchAlbumsArtist(email);
+                    setAlbums(fetchedAlbums);
+                } else if (role.includes('songwriter')) {
+                    const fetchedAlbums = await fetchAlbumsSongwriter(email);
+                    setAlbums(fetchedAlbums);
+                }
             } catch (err) {
                 console.error("Failed to fetch data:", err);
                 toast.error("Failed to load data");
@@ -30,7 +36,7 @@ const kelola_album_song_as: React.FC = () => {
         };
     
         loadData();
-    }, []);
+    }, [email, role]);
 
     useEffect(() => {
         setIsLoaded(true);
@@ -42,11 +48,11 @@ const kelola_album_song_as: React.FC = () => {
         }
     }, [isAuthenticated, isLoaded]);
 
-    const handleDelete = async (judul: string) => {
+    const handleDelete = async (id: string) => {
         try {
-            await deleteAlbum(judul);
+            await deleteAlbum(id);
             toast.success("Album deleted");
-            setAlbums(albums.filter(album => album.judul !== judul));
+            setAlbums(albums.filter(album => album.id !== id));
         } catch (error) {
             console.error("Failed to delete album:", error);
             toast.error("Failed to delete album");
@@ -78,9 +84,9 @@ const kelola_album_song_as: React.FC = () => {
                             <td className="border px-4 py-2">{album.jumlahLagu}</td>
                             <td className="border px-4 py-2">{album.totalDurasi}</td>
                             <td className="border px-4 py-2">
-                                <button onClick={() => router.push(`/kelola_album_song_as/daftar_lagu/`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Daftar Lagu</button>
-                                <button onClick={() => router.push(`/kelola_album_song_as/create_lagu$`)} className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Tambah Lagu</button>
-                                <button onClick={() => handleDelete(album.judul)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
+                                <button onClick={() => router.push(`/kelola_album_song_as/daftar_lagu/${album.id}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Daftar Lagu</button>
+                                <button onClick={() => router.push(`/kelola_album_song_as/create_lagu/${album.id}`)} className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Tambah Lagu</button>
+                                <button onClick={() => handleDelete(album.id)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
                             </td>
                         </tr>
                     ))}

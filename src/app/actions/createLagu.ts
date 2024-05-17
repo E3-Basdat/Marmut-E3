@@ -17,6 +17,11 @@ export async function fetchGenre(): Promise<string[]> {
     return results.rows.map(row => row.genre as string);
 }
 
+export async function fetchAlbumName(idAlbum: string): Promise<string[]> {
+    const results = await sql`SELECT judul FROM ALBUM WHERE id = ${idAlbum}`;
+    return results.rows.map(row => row.judul as string);
+}
+
 async function getArtistIdByName(artistName: string): Promise<string> {
     const result = await sql`
         SELECT id
@@ -59,6 +64,8 @@ export async function createLagu(formData: FormData) {
         throw new Error("Artist not Found.");
     }
 
+    const idAlbum = formData.get('idAlbum') as string;
+
     const songwriters = JSON.parse(formData.get('songwriters') as string);
     const genres = JSON.parse(formData.get('genres') as string);
     const durasi = formData.get('durasi') as string;
@@ -88,7 +95,7 @@ export async function createLagu(formData: FormData) {
         ) VALUES (
             ${newKontenId},
             ${artistId},
-            ${}
+            ${idAlbum}
         )
     `;
     
