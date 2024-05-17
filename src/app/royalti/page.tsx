@@ -18,7 +18,7 @@ const royalti: React.FC = () => {
     const { email, isAuthenticated, role} = useAuth();
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const [royalti, setRoyalti] = useState<Royalti[]>([]);
+    const [royaltis, setRoyalti] = useState<Royalti[]>([]);
     
     useEffect(() => {
         const loadData = async () => {
@@ -40,7 +40,7 @@ const royalti: React.FC = () => {
         };
 
         loadData();
-    }, [email, role, isAuthenticated]);
+    }, [email, role]);
 
 
     useEffect(() => {
@@ -53,7 +53,7 @@ const royalti: React.FC = () => {
         }
     }, [isAuthenticated, isLoaded]);
 
-    if (!isAuthenticated || !role.includes('artist') || !role.includes('songwriter') || !role.includes('label')) {
+    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter') && !role.includes('label')) {
         return <p>Access Denied</p>;
     }
     
@@ -71,13 +71,13 @@ const royalti: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {royalti.map((r, index) => (
+                    {royaltis.map((royalti, index) => (
                         <tr key={index}>
-                            <td className="border px-4 py-2">{r.judulLagu}</td>
-                            <td className="border px-4 py-2">{r.judulAlbum}</td>
-                            <td className="border px-4 py-2">{r.totalPlay}</td>
-                            <td className="border px-4 py-2">{r.totalDownload}</td>
-                            <td className="border px-4 py-2">Rp {r.totalRoyalti}</td>
+                            <td className="border px-4 py-2">{royalti.judulLagu}</td>
+                            <td className="border px-4 py-2">{royalti.judulAlbum}</td>
+                            <td className="border px-4 py-2">{royalti.totalPlay}</td>
+                            <td className="border px-4 py-2">{royalti.totalDownload}</td>
+                            <td className="border px-4 py-2">Rp {royalti.totalRoyalti}</td>
                         </tr>
                     ))}
                 </tbody>

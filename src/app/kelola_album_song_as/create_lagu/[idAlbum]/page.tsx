@@ -89,11 +89,11 @@ const create_lagu: React.FC = () => {
 
         try {
             await createLagu(formData);
-            toast.success("Album and song created successfully");
+            toast.success("Song created successfully");
             router.replace("/kelola_album_song_as");
         } catch (err) {
             console.error(`Error: ${err}`);
-            toast.error("Failed to create album");
+            toast.error("Failed to create song");
         }
     };
 

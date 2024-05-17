@@ -18,7 +18,7 @@ const detail_lagu: React.FC = () => {
     const router = useRouter();
     const [detailLagu, setDetailLagu] = useState<DetailLagu[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
-    const { idLabel , isAuthenticated , role } = useAuth();
+    const { isAuthenticated } = useAuth();
     const params = useParams();
     const idLagu = params.idLagu as string;
 
@@ -54,31 +54,31 @@ const detail_lagu: React.FC = () => {
             <h1 className="text-3xl">{detailLagu[0]?.judulLagu}</h1>
             <div className='flex flex-col w-1/2'>
                 <div className='mb-4'>
-                    <h2 className="text-xl font-semibold">Album:</h2>
+                    <h2 className="text-xl font-semibold">Album</h2>
                     <p className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4 text-white">
                         {detailLagu[0]?.albumLagu}
                     </p>
                 </div>
                 <div className='mb-4'>
-                    <h2 className="text-xl font-semibold">Artist:</h2>
+                    <h2 className="text-xl font-semibold">Artist</h2>
                     <p className={`font-bold bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4 text-white`}>
                         {detailLagu[0]?.artistLagu}
                     </p>
                 </div>
                 <div className='mb-4'>
-                    <h2 className="text-xl font-semibold">Songwriter:</h2>
+                    <h2 className="text-xl font-semibold">Songwriter</h2>
                     <p className={`font-bold bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4 text-white`}>
                         {detailLagu[0]?.songwriterLagu}
                     </p>
                 </div>
                 <div className='mb-4'>
-                    <h2 className="text-xl font-semibold">Genre:</h2>
+                    <h2 className="text-xl font-semibold">Genre</h2>
                     <p className={`font-bold bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4 text-white`}>
                         {detailLagu[0]?.genreLagu}
                     </p>
                 </div>
                 <div className='mb-4'>
-                    <h2 className="text-xl font-semibold">Durasi:</h2>
+                    <h2 className="text-xl font-semibold">Durasi</h2>
                     <p className={`font-bold bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4 text-white`}>
                         {detailLagu[0]?.durasiLagu}
                     </p>
