@@ -16,8 +16,21 @@ const TabelLangganan = () => {
     const [isLoaded, setIsLoaded] = useState(false);
 
     const handleSubscribe = (selectedPaket: Paket) => {
-        const query = `?jenis=${encodeURIComponent(selectedPaket.jenis)}&harga=${encodeURIComponent(selectedPaket.harga.toString())}`;
-        router.push(`/langganan/pembayaran${query}`);
+        // const query = `?jenis=${encodeURIComponent(selectedPaket.jenis)}&harga=${encodeURIComponent(selectedPaket.harga.toString())}`;
+        switch (selectedPaket.jenis) {
+            case '1 Bulan':
+                router.push(`/langganan/pembayaran/1`);
+                break;
+            case '3 Bulan':
+                router.push(`/langganan/pembayaran/2`);
+                break;
+            case '6 Bulan':
+                router.push(`/langganan/pembayaran/6`);
+                break;
+            case '1 Tahun':
+                router.push(`/langganan/pembayaran/12`);
+                break;
+        }
     };
 
     const handleHistory = () => {
@@ -26,7 +39,6 @@ const TabelLangganan = () => {
 
     async function getPaket() {
         const result = await getAllPaket();
-        console.log(result);
         setPaket(result.rows as Paket[]);
     }
 
