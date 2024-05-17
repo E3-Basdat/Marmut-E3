@@ -100,7 +100,10 @@ const PlaySong : React.FC = () => {
             {songData ? (
                 <div className="flex flex-col justify-start w-full">
                     <div className="mb-2 text-left"><span className="font-bold">Judul:</span> {songData.judul}</div>
-                    <div className="mb-2 text-left"><span className="font-bold">Tanggal Rilis:</span> {songData.tanggal_rilis.toString()}</div>
+                    <div className="mb-2 text-left">
+    <span className="font-bold">Tanggal Rilis:</span> {new Date(songData.tanggal_rilis).toDateString().split(" ").slice(0, 4).join(" ")}
+</div>
+
                     <div className="mb-2 text-left"><span className="font-bold">Tahun:</span> {songData.tahun}</div>
                     <div className="mb-2 text-left"><span className="font-bold">Durasi:</span> {songData.durasi}</div>
                     <div className="mb-2 text-left"><span className="font-bold">Total Play:</span> {songData.total_play}</div>

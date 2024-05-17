@@ -1,5 +1,6 @@
 "use server";
 import { sql } from "@vercel/postgres";
+import { count } from "console";
 import { v4 as uuidv4 } from "uuid";
 
 export async function showPlaylist(id: string, email: string) {
@@ -176,7 +177,6 @@ export async function listLagu() {
         JOIN KONTEN k ON s.id_konten = k.id;
 
         `;
-        console.log("tes")
         console.log(rows[0]);
         if (rows.length > 0) {
             return rows;
@@ -205,6 +205,7 @@ export async function tambahLagu(id_playlist : string , id_konten: string) {
 
 export async function cariIdLagu(judul_lagu: string) {
     try {
+        console.log(judul_lagu);
         const { rows } = await sql`
             SELECT
             s.id_konten
@@ -212,6 +213,8 @@ export async function cariIdLagu(judul_lagu: string) {
             JOIN KONTEN k ON s.id_konten = k.id
             WHERE k.judul = ${judul_lagu}
         `;
+
+        console.log("hasil :",rows);
         
         return rows.length > 0 ? rows[0].id : null;
     } catch (err: any) {
@@ -222,6 +225,7 @@ export async function cariIdLagu(judul_lagu: string) {
 
 
 export async function cariIdPlaylist(id_user_playlist: string) {
+    console.log("atas =", id_user_playlist);
     try {
         const { rows } = await sql`
            SELECT
@@ -230,6 +234,8 @@ export async function cariIdPlaylist(id_user_playlist: string) {
            JOIN user_playlist up ON pl.id = up.id_playlist
            WHERE up.id_user_playlist = ${id_user_playlist};
         `;
+
+        console.log("row =", rows);
         
         return rows.length > 0 ? rows[0].id : null;
     } catch (err: any) {
@@ -252,4 +258,30 @@ export async function hapusLagu(id: string) {
         throw err;
     }
 }
+
+export async function cekPlaylist(id_song: string, id_user_playlist: string) {
+    try {
+        const { rows } = await sql`
+            SELECT COUNT(*) AS count_song
+            FROM USER_PLAYLIST up
+            JOIN PLAYLIST_SONG ps ON up.id_playlist = ps.id_playlist
+            WHERE ps.id_song = ${id_song}
+            AND up.id_user_playlist = ${id_user_playlist};
+        `;
+
+        const count = rows[0].count_song;
+        console.log(count);
+
+        if (count > 0) {
+            return null; // Jika lagu sudah ada dalam user_playlist, kembalikan nilai null
+        } else {
+            return "Lagu belum ada dalam user_playlist"; // Jika lagu belum ada dalam user_playlist
+        }
+    } catch (error: any) {
+        console.error("Gagal membaca playlist:", error);
+        throw error;
+    }
+}
+
+
 

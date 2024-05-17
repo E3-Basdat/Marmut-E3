@@ -1,10 +1,11 @@
 "use client"; 
 import React, { useState, useEffect } from "react";
-import { listLagu, tambahLagu, cariIdLagu, cariIdPlaylist } from "@/app/actions/kelolaPlaylist";
+import { listLagu, tambahLagu, cariIdLagu, cariIdPlaylist, cekPlaylist } from "@/app/actions/kelolaPlaylist";
 
 const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
     const [selectedSong, setSelectedSong] = useState<string>("");
     const [songs, setSongs] = useState<string[]>([]);
+    const [errorMessage, setErrorMessage] = useState<string>("");
 
     useEffect(() => {
         const fetchSongs = async () => {
@@ -31,8 +32,19 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
         try {
             const id_konten = await cariIdLagu(judulLagu);
             const id_playlist = await cariIdPlaylist(params.tambahLaguId);
+
+            console.log("onten : ",id_konten);
+            console.log(id_playlist);
+
+            const isExist = await cekPlaylist(id_konten,params.tambahLaguId);
+            if (!isExist) {
+                setErrorMessage("Lagu sudah ada di dalam playlist.");
+                return;
+            }
+
             await tambahLagu(id_playlist, id_konten);
             console.log("Lagu berhasil ditambahkan.");
+            setErrorMessage("");  // Clear any previous error message
         } catch (error) {
             console.error("Gagal menambahkan lagu:", error);
         }
@@ -41,6 +53,11 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center justify-center gap-16 font-bold p-48">
             <h1 className="text-3xl font-bold mb-8 text-white">Tambah Lagu</h1>
+            {errorMessage && (
+                <div className="bg-red-500 text-white font-bold py-2 px-4 mb-4 rounded">
+                    {errorMessage}
+                </div>
+            )}
             <form className="w-full max-w-lg" onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="song" className="block text-white font-bold mb-2">Pilih Lagu</label>
