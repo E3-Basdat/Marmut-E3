@@ -2,6 +2,7 @@
 import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { tambahPlaylist } from "@/app/actions/kelolaPlaylist";
 
 
 const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
@@ -23,15 +24,20 @@ const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const formData = new FormData(event.target as HTMLFormElement);
-
-        console.log("Judul:", judulPlaylist);
-        console.log("Deskripsi:", deskripsiPlaylist);
-        setJudulPlaylist("");
-        setDeskripsiPlaylist("");
+        
 
         try {
             // Lakukan apa yang diperlukan dengan formData, seperti mengirimnya ke server
+            const formData = new FormData(event.target as HTMLFormElement);
+
+
+            console.log("Judul:", judulPlaylist);
+            console.log("Deskripsi:", deskripsiPlaylist);
+            console.log("tes");
+
+            await tambahPlaylist(formData, email);
+            setJudulPlaylist("");
+            setDeskripsiPlaylist("");
             console.log("FormData:", formData);
 
         } catch (err) {
@@ -67,7 +73,7 @@ const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
                     ></textarea>
                 </div>
                 <div className="flex justify-center">
-                    <button
+                    <button 
                         type="submit"
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                     >
