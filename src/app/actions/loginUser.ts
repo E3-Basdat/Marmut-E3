@@ -31,7 +31,7 @@ export async function loginUser(email: string, password: string) {
                 roles.push('premium');
             }
 
-            if (roles.length > 0) {
+            if (roles.length === 0) {
                 roles.push('pengguna');
             }
 
