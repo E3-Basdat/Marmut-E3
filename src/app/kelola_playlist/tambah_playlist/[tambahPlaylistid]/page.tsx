@@ -3,7 +3,7 @@ import { useAuth } from "@/app/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { tambahPlaylist } from "@/app/actions/kelolaPlaylist";
-
+import toast from "react-hot-toast";
 
 const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
     const [judulPlaylist, setJudulPlaylist] = useState<string>("");
@@ -13,9 +13,6 @@ const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
     const email = auth.email;
     const isAuthenticated = auth.isAuthenticated;
 
-    // if(isLoaded){
-
-    // }
     if(!isAuthenticated){
         router.push('/auth/login');
 
@@ -28,16 +25,11 @@ const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
 
         try {
             const formData = new FormData(event.target as HTMLFormElement);
-
-
-            console.log("Judul:", judulPlaylist);
-            console.log("Deskripsi:", deskripsiPlaylist);
-            console.log("tes");
-
             await tambahPlaylist(formData, email);
             setJudulPlaylist("");
             setDeskripsiPlaylist("");
-            console.log("FormData:", formData);
+            toast.success("Playlist berhasil ditambahkan");
+            router.back();
         } catch (err) {
             throw new Error(`Error: ${err}`);
         }

@@ -30,6 +30,25 @@ export async function showPlaylist(id: string, email: string) {
     }
 }
 
+export async function showPlaylistDashboard(email: string) {
+    try {
+        const { rows } = await sql`
+            SELECT
+                up.judul AS judul_playlist,
+                up.jumlah_lagu,
+                up.total_durasi,
+                up.id_user_playlist
+            FROM user_playlist up
+            WHERE  up.email_pembuat = ${email};
+            
+        `;
+
+        return rows;
+    } catch (error: any) {
+        console.error("Failed to read the playlist:", error);
+        throw error;
+    }
+}
 
 export async function detailPlaylist(id: string) {
     try {

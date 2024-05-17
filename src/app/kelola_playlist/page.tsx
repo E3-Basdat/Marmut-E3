@@ -47,7 +47,7 @@ const kelola_playlist : React.FC = () => {
         const handleDelete = async (id: string) => {
             try {
                 await hapusPlaylist(id);
-                const updatedPlaylist = await showPlaylist(id_user_playlist,email);
+                const updatedPlaylist = await getAllPlaylists();
                 setPlaylistData(updatedPlaylist);
             } catch (error) {
                 console.error("Failed to delete playlist:", error);
