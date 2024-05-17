@@ -44,7 +44,7 @@ const Navbar = () => {
 
                     <h1 className="pl-2 text-center text-2xl font-bold text-[#1db954]">Marmut</h1>
                 </div>
-                <div className="flex gap-16 text-center items-center">
+                <div className="flex gap-14 text-center items-center">
                     {isLoaded &&
                         <>
                             {isAuthenticated ? (
@@ -74,7 +74,7 @@ const Navbar = () => {
                                         </NavLink>
                                     )}
                                     {role.includes("podcaster") && (
-                                        <NavLink href="/podcast/list" isActive={pathname === "/podcast/list"}>
+                                        <NavLink href="/podcast/create" isActive={pathname === "/podcast/create"}>
                                             Kelola Podcast
                                         </NavLink>
                                     )}
