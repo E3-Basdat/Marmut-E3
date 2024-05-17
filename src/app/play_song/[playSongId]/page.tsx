@@ -1,22 +1,30 @@
 "use client";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { playSong } from "@/app/actions/playSong"; // Adjust the import path as necessary
+import { playSong,tambahPlaySong, downloadSong } from "@/app/actions/playSong"; // Adjust the import path as necessary
+import { useAuth } from "@/app/contexts/AuthContext";
 
-const PlaySong = ({ params }: { params: { playSongId: string } }) => {
+const PlaySong : React.FC = () => {
     const router = useRouter();
+    const params = useParams();
     const [play, setPlay] = useState(50);
     const [showAddToPlaylistPopup, setShowAddToPlaylistPopup] = useState(false);
     const [showDownloadPopup, setShowDownloadPopup] = useState(false);
     const [messageConfirmPlaylist, setMessage] = useState(false);
     const [selectedPlaylist, setSelectedPlaylist] = useState("");
     const [songData, setSongData] = useState<any>(null);
+    const auth = useAuth();
+    const role = auth.role;
+    const email_user = auth.email;
+    const [progress, setProgress] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
+    const {playSongId} = params;
 
     useEffect(() => {
         const fetchSongData = async () => {
             try {
                 if (params.playSongId) {
-                    const song = await playSong(params.playSongId); 
+                    const song = await playSong(playSongId as string); 
                     console.log(song);
                     setSongData(song); 
                 } else {
@@ -30,16 +38,24 @@ const PlaySong = ({ params }: { params: { playSongId: string } }) => {
         fetchSongData();
     }, [params.playSongId]); // Add playSongId as dependency to re-fetch when it changes
     
-    const handleChangeVolume = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setPlay(Number(event.target.value));
-    };
+    
+
+    
 
     const handleAddToPlaylistClick = () => {
         setShowAddToPlaylistPopup(true);
     };
 
-    const handleDownloadClick = () => {
-        setShowDownloadPopup(true);
+    const handleDownloadClick = async () => {
+        if (songData) {
+            try {
+                const download_song = await downloadSong(email_user, playSongId as string);
+                setShowDownloadPopup(true);
+            } catch (error) {
+                console.error("Failed to download song:", error);
+            }
+        }
+       
     };
 
     const handlePlaylistChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -50,13 +66,33 @@ const PlaySong = ({ params }: { params: { playSongId: string } }) => {
         setMessage(true);
     };
 
-    const handlePlayClick = () => {
-        const audioPlayer = document.getElementById("audioPlayer") as HTMLAudioElement;
-        if (audioPlayer) {
-            audioPlayer.volume = play / 100; // Set volume before playing
-            audioPlayer.play();
-        }
-    };
+
+    const handleButtonClick = () => {
+        setIsLoading(true);
+    
+        // Mengatur waktu timeout untuk menampilkan simulasi loading
+        setTimeout(() => {
+            setIsLoading(false);
+            setProgress(0); // Reset progress setelah loading selesai
+        }, 5000); // Atur durasi loading di sini (dalam milidetik)
+    
+        // Mengatur progress bar untuk berjalan otomatis
+        const interval = setInterval(() => {
+            setProgress(prevProgress => {
+                if (prevProgress >= 100) {
+                    clearInterval(interval);
+                    return 100;
+                } else {
+                    const newProgress = prevProgress + 5; // Atur kecepatan progres di sini
+                    if (newProgress > 70) {
+                        tambahPlaySong(email_user,playSongId as string); 
+                    }
+                    return newProgress;
+                }
+            });
+        }, 500);
+    }
+    
 
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center gap-16 font-bold p-48">
@@ -74,25 +110,28 @@ const PlaySong = ({ params }: { params: { playSongId: string } }) => {
             ) : (
                 <div>Loading...</div>
             )}
-            <div className="flex flex-col gap-8 w-full justify-center items-center">
+             <div className="flex flex-col gap-8 w-full justify-center items-center">
                 <input
                     type="range"
                     min="0"
                     max="100"
-                    value={play}
-                    onChange={handleChangeVolume}
+                    value={progress}
                     className="w-1/4"
+                    disabled
                 />
-                <button onClick={handlePlayClick} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-4 w-1/4">
-                    Play
+                <button onClick={handleButtonClick} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                    play
                 </button>
+     
                 <div className="flex w-1/4 justify-between">
                     <button onClick={handleAddToPlaylistClick} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/2">
                         Add To Playlist
                     </button>
-                    <button onClick={handleDownloadClick} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/2 ml-2">
+                    {role.includes("premium") && (
+                    <button onClick={handleDownloadClick} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4">
                         Download
                     </button>
+                )}
                 </div>
                 <button onClick={() => router.back()} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Kembali

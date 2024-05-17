@@ -1,12 +1,17 @@
 "use client";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { playPlaylist } from "@/app/actions/playPlaylist"; // Adjust the import path as necessary
+import { playPlaylist, tambahPlayPlaylist} from "@/app/actions/playPlaylist";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 const PlayPlaylist = ({ params }: { params: { playPlaylistId: string } }) => {
     const router = useRouter();
     const { id } = useParams();
     const [playlistData, setPlaylistData] = useState<any>(null);
+    const auth = useAuth();
+    const email_user = auth.email;
+
+
 
     useEffect(() => {
         const fetchPlaylistData = async () => {
@@ -22,11 +27,22 @@ const PlayPlaylist = ({ params }: { params: { playPlaylistId: string } }) => {
         fetchPlaylistData();
     });
 
+    const { judul_playlist, nama_pembuat, deskripsi, jumlah_lagu, tanggal_dibuat, total_durasi,id_song } = playlistData[0];
+
+    const handleShufflePlay = async () => {
+        try {
+            await tambahPlayPlaylist(nama_pembuat,params.playPlaylistId,email_user); // Ganti dengan parameter yang sesuai
+            console.log("Berhasil menambahkan playlist untuk diputar.");
+        } catch (error) {
+            console.error("Gagal menambahkan playlist untuk diputar:", error);
+        }
+    };
+
     if (!playlistData) {
         return <div>Loading...</div>;
     }
 
-    const { judul_playlist, nama_pembuat, deskripsi, jumlah_lagu, tanggal_dibuat, total_durasi } = playlistData[0];
+    
     
 
 
@@ -41,7 +57,7 @@ const PlayPlaylist = ({ params }: { params: { playPlaylistId: string } }) => {
                 <div className="mb-2 text-left"><span className="font-bold">Total Durasi:</span> {total_durasi}</div>
                 <div className="mb-2 text-left"><span className="font-bold">Tanggal Dibuat:</span> {tanggal_dibuat.toString()}</div>
                 <div className="mb-2 text-left"><span className="font-bold">Deskripsi:</span> {deskripsi}</div>
-                <button className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                <button onClick={handleShufflePlay} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Shuffle Play
                 </button>
             </div>
@@ -63,7 +79,7 @@ const PlayPlaylist = ({ params }: { params: { playPlaylistId: string } }) => {
                             <td className="border px-4 py-2">{song.durasi}</td>
                             <td className="border px-4 py-2">
                                 <button className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat</button>
-                                <button className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Play</button>
+                                <button onClick={() => router.push(`/play_song/${song.id_song}`)} className= "bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Play</button>
                             </td>
                         </tr>
                     ))}

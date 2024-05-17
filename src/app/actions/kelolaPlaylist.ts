@@ -12,7 +12,9 @@ export async function showPlaylist(id: string, email: string) {
                 up.id_user_playlist
             FROM user_playlist up
             WHERE up.id_user_playlist = ${id} 
+            
         `;
+        // AND up.email_pembuat = ${email};
 
         console.log(rows);
         
@@ -79,6 +81,32 @@ export async function detailPlaylist(id: string) {
         throw error;
     }
 }
+
+export async function getAllPlaylists() {
+    try {
+        const { rows } = await sql`
+            SELECT
+                up.id_user_playlist,
+                up.judul AS judul_playlist,
+                ak.nama AS nama_pembuat,
+                up.deskripsi,
+                up.jumlah_lagu,
+                up.tanggal_dibuat,
+                up.total_durasi
+            FROM
+                user_playlist up
+            JOIN Akun ak ON up.email_pembuat = ak.email;
+        `;
+        
+        console.log(rows);
+        
+        return rows;
+    } catch (error: any) {
+        console.error("Failed to fetch playlists:", error);
+        throw error;
+    }
+}
+
 
 export async function ubahPlaylist(formData: FormData, id : string) {
     const judul = formData.get('judul') as string;

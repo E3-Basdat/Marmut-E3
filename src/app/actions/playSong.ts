@@ -1,9 +1,8 @@
 "use server";
 import { sql } from "@vercel/postgres";
-import { useAuth } from "../contexts/AuthContext";
+
 
 export async function playSong(id: string) {
-    const  auth = useAuth();
     try {
         console.log("Fetching song details for ID:", id);
         const { rows } = await sql`
@@ -37,3 +36,30 @@ export async function playSong(id: string) {
         throw error;
     }
 }
+
+export async function tambahPlaySong(email: string, id_song: string) {
+    try {
+        await sql`
+            INSERT INTO AKUN_PLAY_SONG (email_pemain, id_song, waktu)
+            VALUES (${email}, ${id_song}, current_timestamp);
+        `;
+        console.log("Lagu berhasil ditambahkan ke playlist.");
+    } catch (err: any) {
+        console.error("Gagal menambahkan lagu ke playlist:", err);
+        throw err;
+    }
+}
+
+export async function downloadSong(email: string, id_song: string) {
+    try {
+        await sql`
+            INSERT INTO downloaded_song (id_song, email_downloader)
+            VALUES (${id_song}, ${email});
+        `;
+        console.log("Lagu berhasil diunduh.");
+    } catch (err: any) {
+        console.error("Gagal mengunduh lagu:", err);
+        throw err;
+    }
+}
+
