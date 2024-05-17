@@ -71,7 +71,7 @@ export async function registerTransaction(email: string, jenis: string, nominal:
         case '6 Bulan':
             akhir.setMonth(akhir.getMonth() + 6);
             break;
-        case '12 Bulan':
+        case '1 Tahun':
             akhir.setMonth(akhir.getMonth() + 12);
             break;
         default:
@@ -86,7 +86,11 @@ export async function registerTransaction(email: string, jenis: string, nominal:
         `;
 
         await sql`
-        INSER INTO PREMIUM VALUES(${email});
+        INSERT INTO PREMIUM VALUES(${email});
+        `;
+
+        await sql`
+        DELETE FROM NONPREMIUM WHERE email = ${email};
         `;
     } catch (err) {
         throw new Error(`Error: ${err}`);

@@ -31,10 +31,9 @@ const PembayaranPage = () => {
         }
         console.log(dropdownLabel);
         // TODO: submit data user ke fungsi sql (ke form)
-        // await registerTransaction(email, selectedPaket.jenis,selectedPaket.harga, paymentMethod);
-
-
-        // router.push('/langganan');
+        await registerTransaction(email, selectedPaket.jenis,selectedPaket.harga, paymentMethod);
+        toast.success("Purchase Success");
+        router.push('/langganan');
     };
 
     const handlePaymentMethodChange = (method: string) => {

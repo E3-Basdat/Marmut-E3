@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
 import { getDownloadedSongs } from '../actions/downloadedsongs';
+import toast from 'react-hot-toast';
+
 
 interface downloadedsongs{
     title : string; 
@@ -45,10 +47,10 @@ function DownloadedSongs() {
     if (isLoaded) {
         if (!isAuthenticated) {
             router.push("/auth/login");
+        } else if (!role.includes("premium")){
+            router.push("/langganan")
+            toast.error("Kamu tidak memiliki langganan Premium!");
         }
-        // } else if (!role.includes("premium")){
-        //     router.push("/langganan")
-        // }
     }
 
     return (
@@ -79,7 +81,11 @@ function DownloadedSongs() {
                                 </td>
                             </tr>
                             ))}
-                            
+                            {song.length === 0 && (
+                            <tr>
+                                <td colSpan={4} className="py-2 px-4 text-center">Kamu belum menggunggah lagu apapun</td>
+                                </tr>
+                            )}
                         </tbody>
                     </table>
                     {notification && (
