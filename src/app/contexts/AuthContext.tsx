@@ -37,6 +37,7 @@ export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({ chi
         setIsAuthenticated(storedIsAuthenticated);
         setRole(localStorage.getItem("role") ? localStorage.getItem("role")?.split(",") as any : ['']);
         setIdLabel(localStorage.getItem("idLabel") || '');
+        setEmail(storedEmail || '')
     }, []);
 
     const login = async (email: string, password: string): Promise<('' | 'pengguna' | 'podcaster' | 'songwriter' | 'artist' | 'label' | 'premium')[]> => {
