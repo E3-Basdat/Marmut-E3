@@ -32,18 +32,16 @@ const SearchBar = () => {
     if (!query) return;
     const response = await getSearch(query);
     console.log(response.rows);
-    setResults(response.rows as SearchResult[]); // Assuming data is an array of SearchResult objects
+    setResults(response.rows as SearchResult[]); 
   };
 
   const handleLihat = (item: SearchResult) => {
-    // Handle the view action, navigate to the detail page based on item type
     if (item.type == "SONG"){
       router.push(`/detail_lagu/${item.id}`);
     } else if (item.type == "PODCAST") {     
       router.push(`/detail_podcast/${item.id}`);
     } else {
-      console.log(item.title);
-      // router.push(`/detail_podcast/${item.id}`);
+      router.push(`/play_playlist/${item.id})}`);
     }
     
   };
