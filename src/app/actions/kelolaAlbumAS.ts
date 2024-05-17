@@ -65,14 +65,6 @@ export async function fetchAlbumsSongwriter(email: string) {
     }
 }
 
-export async function getSelectedArtist() {
-
-}
-
-export async function getSelectedSongwriters() {
-
-}
-
 export async function deleteAlbum(id: string) {
     try {
         const result = await sql`

@@ -66,6 +66,10 @@ const create_lagu: React.FC = () => {
         }
     }, [isAuthenticated, isLoaded]);
 
+    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter')) {
+        return <p>Access Denied</p>;
+    }
+
     const handleCheckboxChange = (setter: React.Dispatch<React.SetStateAction<string[]>>, selectedItems: string[]) => (event: ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
         if (checked) {
@@ -112,17 +116,6 @@ const create_lagu: React.FC = () => {
                             <option key={index} value={name}>{name}</option>
                         ))}
                     </select>
-                    {/* <label>Artist</label>
-                    {role.includes('artist') ? (
-                        <input type="text" value={email} readOnly className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
-                    ) : (
-                        <select name="artist" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black">
-                            <option value="">Select Artist</option>
-                            {artist.map((name, index) => (
-                                <option key={index} value={name}>{name}</option>
-                            ))}
-                        </select>
-                    )} */}
                 </div>
                 <p className="text-left text-lg mt-8 mb-4">Songwriter:</p>
                 <div className='mb-4'>

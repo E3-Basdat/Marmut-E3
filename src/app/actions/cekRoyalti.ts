@@ -21,9 +21,9 @@ export async function getRoyaltiArtist(email: string) {
         INNER JOIN 
             PEMILIK_HAK_CIPTA ON ARTIST.id_pemilik_hak_cipta = PEMILIK_HAK_CIPTA.id
         WHERE 
-            ARTIST.email_akun = ${email} 
+            ARTIST.email_akun = ${email}
         ORDER BY 
-            KONTEN.judul;
+            KONTEN.judul
         `;
         return results.rows.map(row => ({
             judulLagu: row.Judul_Lagu,
@@ -49,19 +49,21 @@ export async function getRoyaltiSongwriter(email: string) {
             SONG.total_download AS Total_Download,
             (PEMILIK_HAK_CIPTA.rate_royalti * SONG.total_play) AS Total_Royalti_Didapat
         FROM 
-            LABEL
+            SONGWRITER
         INNER JOIN 
-            SONG ON LABEL.id = SONG.id_label
+            SONGWRITER_WRITE_SONG ON SONGWRITER.id = SONGWRITER_WRITE_SONG.id_songwriter
+        INNER JOIN 
+            SONG ON SONGWRITER_WRITE_SONG.id_song = SONG.id_konten
         INNER JOIN 
             KONTEN ON SONG.id_konten = KONTEN.id
         INNER JOIN 
             ALBUM ON SONG.id_album = ALBUM.id
         INNER JOIN 
-            PEMILIK_HAK_CIPTA ON LABEL.id_pemilik_hak_cipta = PEMILIK_HAK_CIPTA.id
+            PEMILIK_HAK_CIPTA ON SONGWRITER.id_pemilik_hak_cipta = PEMILIK_HAK_CIPTA.id
         WHERE 
-            SONGWRITER.email_akun = ${email} 
+            SONGWRITER.email_akun = ${email}
         ORDER BY 
-            KONTEN.judul;
+            KONTEN.judul
         `;
         return results.rows.map(row => ({
             judulLagu: row.Judul_Lagu,
@@ -89,17 +91,21 @@ export async function getRoyaltiLabel(email:string ) {
         FROM 
             LABEL
         INNER JOIN 
-            SONG ON LABEL.id = SONG.id_label
+            ALBUM ON LABEL.id = ALBUM.id_label
+        INNER JOIN 
+            SONG ON ALBUM.id = SONG.id_album
         INNER JOIN 
             KONTEN ON SONG.id_konten = KONTEN.id
         INNER JOIN 
-            ALBUM ON SONG.id_album = ALBUM.id
+            ARTIST ON SONG.id_artist = ARTIST.id
         INNER JOIN 
-            PEMILIK_HAK_CIPTA ON LABEL.id_pemilik_hak_cipta = PEMILIK_HAK_CIPTA.id
+            PEMILIK_HAK_CIPTA ON ARTIST.id_pemilik_hak_cipta = PEMILIK_HAK_CIPTA.id
         WHERE 
-            LABEL.email = ${email} 
+            LABEL.email = ${email}
+        GROUP BY 
+            KONTEN.judul, ALBUM.judul
         ORDER BY 
-            KONTEN.judul;
+            KONTEN.judul
         `;
         return results.rows.map(row => ({
             judulLagu: row.Judul_Lagu,

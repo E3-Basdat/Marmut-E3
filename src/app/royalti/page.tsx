@@ -40,7 +40,8 @@ const royalti: React.FC = () => {
         };
 
         loadData();
-    }, [email, role]);
+    }, [email, role, isAuthenticated]);
+
 
     useEffect(() => {
         setIsLoaded(true);
@@ -51,6 +52,10 @@ const royalti: React.FC = () => {
             router.push("auth/login");
         }
     }, [isAuthenticated, isLoaded]);
+
+    if (!isAuthenticated || !role.includes('artist') || !role.includes('songwriter') || !role.includes('label')) {
+        return <p>Access Denied</p>;
+    }
     
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center gap-16 font-bold p-48">

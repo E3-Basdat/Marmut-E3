@@ -15,7 +15,7 @@ interface Song {
 
 const daftar_lagu: React.FC = () => {
     const router = useRouter();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated , role } = useAuth();
     const [isLoaded, setIsLoaded] = useState(false);
 
     const params = useParams();
@@ -77,6 +77,10 @@ const daftar_lagu: React.FC = () => {
             router.push("auth/login");
         }
     }, [isAuthenticated, isLoaded]);
+
+    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter')) {
+        return <p>Access Denied</p>;
+    }
 
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center gap-16 font-bold p-48">

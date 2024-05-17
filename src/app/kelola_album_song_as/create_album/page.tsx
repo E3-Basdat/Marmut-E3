@@ -1,10 +1,9 @@
 "use client"
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenre } from "@/app/actions/createAlbumAS";
+import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenre, fetchSelectedSongwriters } from "@/app/actions/createAlbumAS";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
-import { getSelectedSongwriters } from "@/app/actions/kelolaAlbumAS";
 
 const create_album: React.FC = () => {
     const { email , isAuthenticated, role } = useAuth();
@@ -15,34 +14,37 @@ const create_album: React.FC = () => {
     const [selectedSongwriters, setSelectedSongwriters] = useState<string[]>([]);
     const [genres, setGenres] = useState<string[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                const [fetchedLabels, fetchedArtists, fetchedSongwriters, fetchedGenres] = await Promise.all([
-                    fetchLabelNames(),
-                    fetchArtist(),
-                    fetchSongwriter(),
-                    fetchGenre(),
-                ]);
-                setLabels(fetchedLabels);
-                setArtist(fetchedArtists);
-                setSongwriters(fetchedSongwriters);
-                setGenres(fetchedGenres);
-                // if (role.includes('songwriter')) {
-                //     const selectedSongwriters = await Promise.all(getSelectedSongwriters());
-                //     setSelectedSongwriters();
-                // }
+        if (email) {
+            const loadData = async () => {
+                try {
+                    const [fetchedLabels, fetchedArtists, fetchedSongwriters, fetchedGenres, fetchedSelectedSongwriters] = await Promise.all([
+                        fetchLabelNames(),
+                        fetchArtist(),
+                        fetchSongwriter(),
+                        fetchGenre(),
+                        fetchSelectedSongwriters(email),
+                    ]);
+                    setLabels(fetchedLabels);
+                    setArtist(fetchedArtists);
+                    setSongwriters(fetchedSongwriters);
+                    setGenres(fetchedGenres);
+                    if (role.includes('songwriter')) {
+                        setSelectedSongwriters([email]);
+                    }
 
-            } catch (err) {
-                console.error("Failed to fetch data:", err);
-                toast.error("Failed to load data");
-            }
-        };
-    
-        loadData();
-    }, []);
+                } catch (err) {
+                    console.error("Failed to fetch data:", err);
+                    toast.error("Failed to load data");
+                }
+            };
+        
+            loadData();
+        }
+    }, [email, role]);
 
     const handleCheckboxChange = (setter: React.Dispatch<React.SetStateAction<string[]>>, selectedItems: string[]) => (event: ChangeEvent<HTMLInputElement>) => {
         const { value, checked } = event.target;
@@ -70,6 +72,20 @@ const create_album: React.FC = () => {
         }
     };
 
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
+
+    useEffect(() => {
+        if (isLoaded && !isAuthenticated) {
+            router.push("auth/login");
+        }
+    }, [isAuthenticated, isLoaded]);
+
+    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter')) {
+        return <p>Access Denied</p>;
+    }
+
     return (
         <div className='flex flex-col items-center gap-16 px-8 py-32 bg-black text-white font-bold min-h-screen'>
             <h1 className="text-3xl">Create Album</h1>
@@ -93,13 +109,6 @@ const create_album: React.FC = () => {
                     <input type="text" placeholder="Judul Lagu" name="judulLagu" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
                 </div>
                 <div className='mb-4'>
-                    {/* <label>Artist</label>
-                    <select name="artist" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black">
-                        <option value="">Select Artist</option>
-                        {artist.map((name, index) => (
-                            <option key={index} value={name}>{name}</option>
-                        ))}
-                    </select> */}
                     <label>Artist</label>
                     {role.includes('artist') ? (
                         <input type="text" value={email} readOnly className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
@@ -117,7 +126,7 @@ const create_album: React.FC = () => {
                     {songwriters.map((name, index) => (
                         <div key={index}>
                             <label>
-                                <input type="checkbox" value={name} checked={selectedSongwriters.includes(name)} onChange={handleCheckboxChange(setSelectedSongwriters, selectedSongwriters)} />
+                                <input type="checkbox" value={name} checked={selectedSongwriters.includes(name)} onChange={handleCheckboxChange(setSelectedSongwriters, selectedSongwriters)} disabled={role.includes('songwriter') && name === email} />
                                 {name}
                             </label>
                         </div>
