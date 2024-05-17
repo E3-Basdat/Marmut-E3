@@ -45,7 +45,7 @@ const Pengguna: React.FC = () => {
             toast.error("Failed to register")
         }
         
-        
+
     };
 
     return (

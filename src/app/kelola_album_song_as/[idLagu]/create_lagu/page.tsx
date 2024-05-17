@@ -1,10 +1,15 @@
 "use client"
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {useRouter} from "next/navigation";
+import { useAuth } from "@/app/contexts/AuthContext";
 
 const create_album: React.FC = () => {
     const [title, setTitle] = useState<string>("");
     const [label, setLabel] = useState<string>("");
+
+    const { isAuthenticated, role } = useAuth();
+    const [isLoaded, setIsLoaded] = useState(false);
+    const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -17,6 +22,20 @@ const create_album: React.FC = () => {
             throw new Error(`Error: ${err}`);
         }
     };
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
+
+    useEffect(() => {
+        if (isLoaded && !isAuthenticated) {
+            router.push("auth/login");
+        }
+    }, [isAuthenticated, isLoaded]);
+
+    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter')) {
+        return <p>Access Denied</p>;
+    }
 
     return (
         <div className='flex flex-col text-white-100 text-center items-center gap-16 px-8 py-32 bg-white font-bold min-h-screen '>
