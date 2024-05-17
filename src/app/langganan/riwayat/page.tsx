@@ -1,14 +1,49 @@
 "use client"
-import Link from 'next/link';
+import { getRiwayatLangganan } from '@/app/actions/langganan';
+import { useAuth } from '@/app/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+
+interface subscriptionHistory{
+    jenis : string;
+    tanggalMulai : Date;
+    tanggalBerakhir : Date;
+    metodePembayaran : string;
+    nominal : string;
+}
 
 function riwayatLangganan() {
+    const { isAuthenticated, email } = useAuth(); 
     const router = useRouter();
+    const [riwayat, setRiwayat] = useState<subscriptionHistory[]>([]);
+    const [isLoaded, setIsLoaded] = useState(false);
+
     const handleKembali = () => {
         router.push('/langganan');
     };
-    /* TODO: fetch data transaksi user*/
+
+    async function getRiwayat() {
+        const result = await getRiwayatLangganan(email);
+        setRiwayat(result.rows as subscriptionHistory[]);
+    }
+
+    useEffect(() => {
+        if (email) {
+            getRiwayat();
+        }
+    }, [email]);
+
+    useEffect(() => {
+        setIsLoaded(true);
+      }, []);
+
+
+    
+    if (isLoaded) {
+        if (!isAuthenticated) {
+            router.push("/auth/login");
+        }
+    }
 
     return (
         <main className="flex min-h-screen text-white-100 flex-col items-center gap-20  py-48"> 
@@ -26,13 +61,15 @@ function riwayatLangganan() {
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td className="py-2 px-4 text-center">1 Bulan</td>
-                                <td className="py-2 px-4 text-center">8 April 2024, 23:00</td>
-                                <td className="py-2 px-4 text-center">8 Mei 2024, 23:00</td>
-                                <td className="py-2 px-4 text-center">GoPay</td>
-                                <td className="py-2 px-4 text-center">Rp40.000</td>
-                            </tr>
+                            {riwayat.map((item, index) =>(
+                                <tr key={index}>
+                                    <td className="py-2 px-4 text-center">{item.jenis}</td>
+                                    <td className="py-2 px-4 text-center"></td>
+                                    <td className="py-2 px-4 text-center"></td>
+                                    <td className="py-2 px-4 text-center">{item.metodePembayaran}</td>
+                                    <td className="py-2 px-4 text-center">Rp{parseInt(item.nominal).toLocaleString('id-ID')}</td>
+                             </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>

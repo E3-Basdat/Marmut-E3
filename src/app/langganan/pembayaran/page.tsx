@@ -1,11 +1,14 @@
 'use client'
 import { useRouter } from "next/navigation";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useAuth } from "@/app/contexts/AuthContext";
 
 const PembayaranPage = () => {
+    const { isAuthenticated, email } = useAuth(); 
     const router = useRouter();
     const searchParams = useSearchParams();
+    const [isLoaded, setIsLoaded] = useState(false);
 
     const jenis = searchParams.get('jenis');
     const harga = searchParams.get('harga');
@@ -14,6 +17,16 @@ const PembayaranPage = () => {
         // TODO: submit data user ke fungsi sql (ke form)
         router.push('/langganan');
     };
+
+    useEffect(() => {
+        setIsLoaded(true);
+      }, []);
+    
+    if (isLoaded) {
+        if (!isAuthenticated) {
+            router.push("/auth/login");
+        }
+    }
 
     return (
         <main className="flex min-h-screen text-white-100 flex-col items-center gap-8 p-48"> 
