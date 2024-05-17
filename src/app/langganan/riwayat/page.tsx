@@ -6,9 +6,9 @@ import React, { useEffect, useState } from 'react'
 
 interface subscriptionHistory{
     jenis : string;
-    tanggalMulai : Date;
-    tanggalBerakhir : Date;
-    metodePembayaran : string;
+    tanggalmulai : Date;
+    tanggalberakhir : Date;
+    metodepembayaran : string;
     nominal : string;
 }
 
@@ -64,12 +64,17 @@ function riwayatLangganan() {
                             {riwayat.map((item, index) =>(
                                 <tr key={index}>
                                     <td className="py-2 px-4 text-center">{item.jenis}</td>
-                                    <td className="py-2 px-4 text-center"></td>
-                                    <td className="py-2 px-4 text-center"></td>
-                                    <td className="py-2 px-4 text-center">{item.metodePembayaran}</td>
+                                    <td className="py-2 px-4 text-center">{item.tanggalmulai.toLocaleDateString()}</td>
+                                    <td className="py-2 px-4 text-center">{item.tanggalberakhir.toLocaleDateString()}</td>
+                                    <td className="py-2 px-4 text-center">{item.metodepembayaran}</td>
                                     <td className="py-2 px-4 text-center">Rp{parseInt(item.nominal).toLocaleString('id-ID')}</td>
                              </tr>
                             ))}
+                            {riwayat.length === 0 && (
+                            <tr>
+                                <td colSpan={5} className="py-2 px-4 text-center">Tidak ada riwayat transaksi</td>
+                            </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>
