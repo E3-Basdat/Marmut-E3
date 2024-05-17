@@ -41,6 +41,8 @@ const Dashboard: React.FC = () => {
         return str.replace(/\b\w/g, char => char.toUpperCase());
     }
 
+    const filteredRoles = role.filter((r) => r !== 'pengguna');
+
     useEffect(() => {
         setIsLoaded(true);
     }, []);
@@ -71,7 +73,7 @@ const Dashboard: React.FC = () => {
                                             <li className="list-item">Gender: {userData?.gender === 1 ? "Laki-Laki" : "Perempuan"}</li>
                                             <li className="list-item">Place of Birth: {userData?.tempat_lahir}</li>
                                             <li className="list-item">Date of Birth: {userData?.tanggal_lahir.toLocaleDateString()}</li>
-                                            <li className="list-item">Role: {role.map(capitalizeWords).join(", ")}</li>
+                                            <li className="list-item">Role: {filteredRoles.map(capitalizeWords).join(", ")}</li>
                                         </ul>
                                     </div>
                                 )}
