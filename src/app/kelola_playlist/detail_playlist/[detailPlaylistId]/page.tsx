@@ -20,7 +20,7 @@ const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
         };
 
         fetchPlaylistData();
-    });
+    },[id]);
 
     const handleDelete = async (id: string) => {
         try {
@@ -87,7 +87,7 @@ const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
                 >
                     Tambah Lagu
                 </button>
-                <button onClick={() => router.push(`/kelola_playlist/${params.detailPlaylistId}`)}
+                <button onClick={() => router.back()}
                  className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Kembali
                 </button>

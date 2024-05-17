@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
         return str.replace(/\b\w/g, char => char.toUpperCase());
     }
 
-    const filteredRoles = role.filter((r) => r !== 'pengguna');
+    const filteredRoles = role.filter((r:string) => r !== 'pengguna' && r!=='premium');
 
     useEffect(() => {
         setIsLoaded(true);
@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex flex-col text-white-100 py-24 min-h-screen gap-4">
                         <div className="black-gradient px-20 py-24">
                             <p>Profile</p>
-                            <h1 className="text-7xl font-bold">Venedict Chen</h1>
+                            <h1 className="text-7xl font-bold">{userData?.nama}</h1>
                             <div className='flex flex-col gap-4'>
                                 <p>{idLabel}</p>
                                 <p>{email}</p>

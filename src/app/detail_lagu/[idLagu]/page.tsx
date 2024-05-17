@@ -86,7 +86,7 @@ const detail_lagu: React.FC = () => {
             </div>
 
             <div className="flex flex-col gap-8 w-full justify-center items-center">
-                <button onClick={() => router.push('/kelola_album_song_as/daftar_lagu')} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                <button onClick={() => router.back()} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Kembali
                 </button>
             </div>

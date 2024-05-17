@@ -57,19 +57,19 @@ const Navbar = () => {
                                             <NavLink href="/chart" isActive={pathname === "/chart"}>
                                                 Chart
                                             </NavLink>
-                                            <NavLink href="/search" isActive={pathname === "/search"}>
+                                            <NavLink href="/searchbar" isActive={pathname === "/searchbar"}>
                                                 Search Bar
                                             </NavLink>
-                                            <NavLink href="/playlist" isActive={pathname === "/playlist"}>
+                                            <NavLink href="/kelola_playlist" isActive={pathname === "/kelola_playlist"}>
                                                 Kelola Playlist
                                             </NavLink>
-                                            <NavLink href="/subscription" isActive={pathname === "/subscription"}>
+                                            <NavLink href="/langganan" isActive={pathname === "/langganan"}>
                                                 Langganan Paket
                                             </NavLink>
                                         </>
                                     )}
                                     {role.includes("premium") && (
-                                        <NavLink href="/downloaded-songs" isActive={pathname === "/downloaded-songs"}>
+                                        <NavLink href="/downloadedsongs" isActive={pathname === "/downloadedsongs"}>
                                             Kelola Downloaded Songs
                                         </NavLink>
                                     )}
