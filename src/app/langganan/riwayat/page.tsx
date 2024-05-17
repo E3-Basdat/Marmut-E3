@@ -70,6 +70,11 @@ function riwayatLangganan() {
                                     <td className="py-2 px-4 text-center">Rp{parseInt(item.nominal).toLocaleString('id-ID')}</td>
                              </tr>
                             ))}
+                            {riwayat.length === 0 && (
+                            <tr>
+                                <td colSpan={5} className="py-2 px-4 text-center">Tidak ada riwayat transaksi</td>
+                            </tr>
+                            )}
                         </tbody>
                     </table>
                 </div>

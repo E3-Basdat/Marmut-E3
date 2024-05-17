@@ -28,3 +28,13 @@ export async function getDownloadedSongs(query : string){
         throw new Error(`Error: ${err}`)
     }
 }
+
+export async function removeDownloadedSong(email : string, id : string){
+    try{
+        await sql`
+        DELETE FROM downloaded_song WHERE email_downloader = ${email} AND id_song = ${id};
+        `;
+    } catch (err) {
+        throw new Error(`Error: ${err}`)
+    }
+}
