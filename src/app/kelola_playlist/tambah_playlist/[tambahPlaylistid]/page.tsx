@@ -33,7 +33,8 @@ const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
 
             console.log("Judul:", judulPlaylist);
             console.log("Deskripsi:", deskripsiPlaylist);
-            console.log("tes");
+            console.log("tes123");
+
 
             await tambahPlaylist(formData, email);
             setJudulPlaylist("");
