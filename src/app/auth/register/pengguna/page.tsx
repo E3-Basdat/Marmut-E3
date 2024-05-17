@@ -3,6 +3,9 @@ import React, { useState } from "react";
 import { registerUser } from "@/app/actions/register";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { CheckEmailAkun } from "@/app/actions/checkEmailAkun";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { CheckEmailLabel } from "@/app/actions/checkEmailLabel";
 const Pengguna: React.FC = () => {
     const[gender, setGender] = useState<string>("")
     const[tanggal_lahir, setTanggalLahir] = useState<string>("")
@@ -18,6 +21,20 @@ const Pengguna: React.FC = () => {
         }
         const formData = new FormData(event.target as HTMLFormElement);
 
+        
+        const emailExistAkun = await CheckEmailAkun(formData.get('email')as string);
+        const emailExistLabel = await CheckEmailLabel(formData.get('email')as string);
+      
+        if (emailExistAkun) {
+            toast.error('Email already exists');
+            return;
+        }
+
+        if(emailExistLabel){
+            toast.error('Email already exists in Label');
+            return;
+        }
+
         try{
             await registerUser(formData);
             toast.success("User registered successfully");
@@ -25,10 +42,10 @@ const Pengguna: React.FC = () => {
         }
 
         catch(err){
-            throw new Error(`Error: ${err}`);
+            toast.error("Failed to register")
         }
         
-        
+
     };
 
     return (

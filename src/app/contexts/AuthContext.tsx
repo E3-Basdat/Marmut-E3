@@ -52,7 +52,6 @@ export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({ chi
                 localStorage.setItem('email', email);
                 localStorage.setItem("role", result.roles.join());
                 localStorage.setItem("idLabel", result.idLabel);
-                router.push('/');
                 return role;
             } else {
                 throw new Error('Failed to login');

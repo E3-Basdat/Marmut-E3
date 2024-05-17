@@ -61,7 +61,7 @@ const PodcastDetail: React.FC = () => {
 
         }
     }
-    console.log(episodeData)
+    // console.log(episodeData)
     return (
         <div className="flex flex-col text-white-100 px-20 py-16 min-h-screen ">
             <div className="px-20 py-16">

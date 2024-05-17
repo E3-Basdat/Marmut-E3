@@ -27,20 +27,17 @@ const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
         
 
         try {
-            // Lakukan apa yang diperlukan dengan formData, seperti mengirimnya ke server
             const formData = new FormData(event.target as HTMLFormElement);
 
 
             console.log("Judul:", judulPlaylist);
             console.log("Deskripsi:", deskripsiPlaylist);
-            console.log("tes123");
-
+            console.log("tes");
 
             await tambahPlaylist(formData, email);
             setJudulPlaylist("");
             setDeskripsiPlaylist("");
             console.log("FormData:", formData);
-
         } catch (err) {
             throw new Error(`Error: ${err}`);
         }
