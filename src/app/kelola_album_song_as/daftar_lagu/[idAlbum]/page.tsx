@@ -60,7 +60,7 @@ const daftar_lagu: React.FC = () => {
     const handleDelete = async (idKonten: string) => {
         try {
             await deleteSong(idKonten);
-            toast.success("Album deleted");
+            toast.success("Song deleted");
             setSongs(songs.filter(song => song.idKonten !== idKonten));
         } catch (error) {
             console.error("Failed to delete song:", error);
@@ -78,7 +78,7 @@ const daftar_lagu: React.FC = () => {
         }
     }, [isAuthenticated, isLoaded]);
 
-    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter')) {
+    if (!isAuthenticated || !role.includes('artist') && !role.includes('songwriter') && !role.includes('label')) {
         return <p>Access Denied</p>;
     }
 
