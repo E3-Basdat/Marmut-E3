@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { playSong,tambahPlaySong, downloadSong } from "@/app/actions/playSong"; // Adjust the import path as necessary
+import { playSong,tambahPlaySong, downloadSong, getAllPlaylists,tambahLagu } from "@/app/actions/playSong"; // Adjust the import path as necessary
 import { useAuth } from "@/app/contexts/AuthContext";
 
 const PlaySong : React.FC = () => {
@@ -19,6 +19,7 @@ const PlaySong : React.FC = () => {
     const [progress, setProgress] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const {playSongId} = params;
+    const [playlists, setPlaylists] = useState<any[]>([]);
 
     useEffect(() => {
         const fetchSongData = async () => {
@@ -37,14 +38,26 @@ const PlaySong : React.FC = () => {
     
         fetchSongData();
     }, [params.playSongId]); // Add playSongId as dependency to re-fetch when it changes
-    
-    
 
+    useEffect(() => {
+        const fetchPlaylists = async () => {
+            try {
+                const playlistsData = await getAllPlaylists(); // Mendapatkan daftar playlist dari server
+                setPlaylists(playlistsData); // Menyimpan daftar playlist ke dalam state
+            } catch (error) {
+                console.error("Failed to fetch playlists:", error);
+            }
+        };
     
+        fetchPlaylists();
+    }, []); 
 
     const handleAddToPlaylistClick = () => {
         setShowAddToPlaylistPopup(true);
     };
+    
+    
+
 
     const handleDownloadClick = async () => {
         if (songData) {
@@ -62,8 +75,16 @@ const PlaySong : React.FC = () => {
         setSelectedPlaylist(event.target.value);
     };
 
-    const messageNotification = () => {
-        setMessage(true);
+    const handleAddToPlaylistSubmit = async () => {
+        try {
+            // Memanggil fungsi tambahLagu dengan parameter id_playlist dan id_konten
+            await tambahLagu(selectedPlaylist, playSongId as string);
+            
+            // Menampilkan notifikasi bahwa lagu telah ditambahkan ke playlist yang dipilih
+            setMessage(true);
+        } catch (error) {
+            console.error("Failed to add song to playlist:", error);
+        }
     };
 
 
@@ -141,31 +162,31 @@ const PlaySong : React.FC = () => {
                 </button>
             </div>
 
-            {/* Add To Playlist Popup */}
+            
             {showAddToPlaylistPopup && (
-                <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-                    <div className="bg-white p-8 rounded-lg">
-                        <h2 className="text-2xl mb-4">Add To Playlist Popup</h2>
-                        <div className="flex items-center">
-                            <select 
-                                onChange={handlePlaylistChange} 
-                                className="mr-4 text-black appearance-none w-48" // Adjust width here
-                            >
-                                <option value="" className="text-gray-400">Pilih Playlist</option>
-                                <option value="playlist1">Playlist 1</option>
-                                <option value="playlist2">Playlist 2</option>
-                                <option value="playlist3">Playlist 3</option>
-                            </select>
-                            <button onClick={messageNotification} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-2 px-4" disabled={!selectedPlaylist}>
-                                Tambah
-                            </button>
-                        </div>
-                        <button onClick={() => setShowAddToPlaylistPopup(false)} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-2 px-4 mt-4">
-                            Close
-                        </button>
-                    </div>
-                </div>
-            )}
+    <div className="fixed inset-0 flex items-center text-white-100 justify-center bg-gray-900 bg-opacity-50">
+        <div className="bg-white p-8 rounded-lg">
+            <h2 className="text-2xl mb-4">Add To Playlist Popup</h2>
+            <div className="flex items-center">
+                <select 
+                    onChange={handlePlaylistChange} 
+                    className="mr-4 text-black appearance-none w-48 bg-white"
+                >
+                    <option value="" className="text-white-100">Pilih Playlist</option>
+                    {playlists.map((playlist) => (
+                        <option key={playlist.id} value={playlist.id}>{playlist.judul}</option>
+                    ))}
+                </select>
+                <button onClick={handleAddToPlaylistSubmit} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-2 px-4" disabled={!selectedPlaylist}>
+                    Tambah
+                </button>
+            </div>
+            <button onClick={() => setShowAddToPlaylistPopup(false)} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-2 px-4 mt-4">
+                Close
+            </button>
+        </div>
+    </div>
+)}
 
             {/* Download Popup */}
             {showDownloadPopup && songData && (

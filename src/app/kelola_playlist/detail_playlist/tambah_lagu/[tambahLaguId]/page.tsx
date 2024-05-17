@@ -30,13 +30,17 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
         const [judulLagu] = selectedSong.split(" - ");
 
         try {
-            const id_konten = await cariIdLagu(judulLagu);
+            const fetch_id = await cariIdLagu(judulLagu);
             const id_playlist = await cariIdPlaylist(params.tambahLaguId);
+
+            const {id_konten} = fetch_id;
+            
 
             console.log("onten : ",id_konten);
             console.log(id_playlist);
 
-            const isExist = await cekPlaylist(id_konten,params.tambahLaguId);
+            const isExist = await cekPlaylist(id_konten ,params.tambahLaguId);
+
             if (!isExist) {
                 setErrorMessage("Lagu sudah ada di dalam playlist.");
                 return;

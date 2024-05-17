@@ -63,3 +63,28 @@ export async function downloadSong(email: string, id_song: string) {
     }
 }
 
+export async function getAllPlaylists() {
+    try {
+        const { rows } = await sql`
+            SELECT
+                up.id_user_playlist,
+                up.judul AS judul_playlist,
+                ak.nama AS nama_pembuat,
+                up.deskripsi,
+                up.jumlah_lagu,
+                up.tanggal_dibuat,
+                up.total_durasi
+            FROM
+                user_playlist up
+            JOIN Akun ak ON up.email_pembuat = ak.email;
+        `;
+        
+        console.log(rows);
+        
+        return rows;
+    } catch (error: any) {
+        console.error("Failed to fetch playlists:", error);
+        throw error;
+    }
+}
+

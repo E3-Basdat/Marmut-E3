@@ -216,7 +216,7 @@ export async function cariIdLagu(judul_lagu: string) {
 
         console.log("hasil :",rows);
         
-        return rows.length > 0 ? rows[0].id : null;
+        return rows[0];
     } catch (err: any) {
         console.error("Failed to delete playlist:", err);
         throw err;
@@ -237,7 +237,11 @@ export async function cariIdPlaylist(id_user_playlist: string) {
 
         console.log("row =", rows);
         
-        return rows.length > 0 ? rows[0].id : null;
+        if (rows.length > 0) {
+            return rows[0].id_konten; // Mengembalikan id_konten dari hasil query
+        } else {
+            return null; // Jika lagu tidak ditemukan
+        }
     } catch (err: any) {
         console.error("Failed to delete playlist:", err);
         throw err;
