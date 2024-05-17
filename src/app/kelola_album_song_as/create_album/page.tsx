@@ -3,8 +3,11 @@ import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenre } from "@/app/actions/createAlbumAS";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { getSelectedSongwriters } from "@/app/actions/kelolaAlbumAS";
 
 const create_album: React.FC = () => {
+    const { email , isAuthenticated, role } = useAuth();
     const [label, setLabel] = useState<string>("");
     const [labels, setLabels] = useState<string[]>([]);
     const [artist, setArtist] = useState<string[]>([]);
@@ -27,6 +30,11 @@ const create_album: React.FC = () => {
                 setArtist(fetchedArtists);
                 setSongwriters(fetchedSongwriters);
                 setGenres(fetchedGenres);
+                // if (role.includes('songwriter')) {
+                //     const selectedSongwriters = await Promise.all(getSelectedSongwriters());
+                //     setSelectedSongwriters();
+                // }
+
             } catch (err) {
                 console.error("Failed to fetch data:", err);
                 toast.error("Failed to load data");
@@ -85,13 +93,24 @@ const create_album: React.FC = () => {
                     <input type="text" placeholder="Judul Lagu" name="judulLagu" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
                 </div>
                 <div className='mb-4'>
-                    <label>Artist</label>
+                    {/* <label>Artist</label>
                     <select name="artist" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black">
                         <option value="">Select Artist</option>
                         {artist.map((name, index) => (
                             <option key={index} value={name}>{name}</option>
                         ))}
-                    </select>
+                    </select> */}
+                    <label>Artist</label>
+                    {role.includes('artist') ? (
+                        <input type="text" value={email} readOnly className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
+                    ) : (
+                        <select name="artist" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black">
+                            <option value="">Select Artist</option>
+                            {artist.map((name, index) => (
+                                <option key={index} value={name}>{name}</option>
+                            ))}
+                        </select>
+                    )}
                 </div>
                 <p className="text-left text-lg mt-8 mb-4">Songwriter:</p>
                 <div className='mb-4'>

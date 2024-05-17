@@ -8,27 +8,41 @@ import { useAuth } from "../contexts/AuthContext";
 interface Album {
     judul: string;
     jumlahLagu: number;
-    totalDurasi: string;
+    totalDurasi: number;
 }
 
 const kelola_album_l: React.FC = () => {
     const [albums, setAlbums] = useState<Album[]>([]);
     const router = useRouter();
-    const { idLabel } = useAuth();
+    const { idLabel , isAuthenticated , role } = useAuth();
+    const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        const loadData = async () => {
-            try {
-                const fetchedAlbums = await fetchAlbums(idLabel);
-                setAlbums(fetchedAlbums);
-            } catch (err) {
-                console.error("Failed to fetch data:", err);
-                toast.error("Failed to load data");
-            }
-        };
+        if (idLabel) {
+            const loadData = async () => {
+                try {
+                    const fetchedAlbums = await fetchAlbums(idLabel);
+                    setAlbums(fetchedAlbums);
+                } catch (err) {
+                    console.error("Failed to fetch data:", err);
+                    toast.error("Failed to load data");
+                }
+            };
+    
+            loadData();
+        }
 
-        loadData();
     }, [idLabel]);
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
+
+    useEffect(() => {
+        if (isLoaded && !isAuthenticated) {
+            router.push("auth/login");
+        }
+    }, [isAuthenticated, isLoaded]);
 
     const handleDelete = async (judul: string) => {
         try {
@@ -39,6 +53,10 @@ const kelola_album_l: React.FC = () => {
             console.error("Failed to delete album:", error);
             toast.error("Failed to delete album");
         }
+    }
+
+    if (!isAuthenticated || !role.includes('label')) {
+        return <p>Access Denied</p>;
     }
 
     return (

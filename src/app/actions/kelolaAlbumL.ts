@@ -3,7 +3,6 @@ import { sql } from "@vercel/postgres";
 
 export async function fetchAlbums(idLabel: string) {
     try {
-        console.log(idLabel)
         const results = await sql`
             SELECT judul, jumlah_lagu, total_durasi 
             FROM ALBUM 
@@ -15,8 +14,8 @@ export async function fetchAlbums(idLabel: string) {
             totalDurasi: row.total_durasi
         }));
     } catch (err: any) {
-        // console.error("fail", err);
-        throw new Error("fail");
+        console.error("Failed to fetch Album:", err);
+        throw new Error("Failed to fetch Album");
     }
 }
 
