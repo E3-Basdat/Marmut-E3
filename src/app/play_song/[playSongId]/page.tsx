@@ -194,7 +194,7 @@ const PlaySong : React.FC = () => {
                     <div className="bg-white p-8 rounded-lg">
                         <h2 className="text-2xl mb-4">Berhasil mengunduh Lagu dengan judul {songData.judul}!</h2>
                         <div className="flex flex-col gap-4">
-                            <button className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-2 px-4">
+                            <button className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-2 px-4" onClick={()=>router.push('/downloadedsongs')}>
                                 Lihat Daftar Download
                             </button>
                             <button onClick={() => setShowDownloadPopup(false)} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-2 px-4">

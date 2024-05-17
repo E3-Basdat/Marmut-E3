@@ -22,7 +22,7 @@ function DownloadedSongs() {
     const handleHapus = async (selectedSong : downloadedsongs) => {
         await removeDownloadedSong(email, selectedSong.id);
         getSongs();
-        setNotification('Berhasil menghapus lagu dari daftar unduhan!'); 
+        toast.success("Berhasil menghapus lagu dari daftar unduhan!")
         setTimeout(() => setNotification(''), 3000); 
     };
 

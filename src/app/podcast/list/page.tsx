@@ -1,21 +1,66 @@
 "use client"
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaList, FaPlus, FaTrash } from 'react-icons/fa';
 import ModalInput from '@/app/components/ModalInput';
+import { useAuth } from '@/app/contexts/AuthContext';
+import { getAllPodcast } from '@/app/actions/getAllPodcast';
+import { DeletePodcast } from '@/app/actions/DeletePodcast';
+import toast from "react-hot-toast";
+import { useRouter } from 'next/navigation';
 
 const ListPodcastPage: React.FC = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedPodcast, setSelectedPodcast] = useState('');
+    const [selectedPodcastId, setSelectedPodcastId] = useState<string>('');
+    const [podcasts, setPodcasts] = useState<any[]>([]);
+    const { email } = useAuth();
 
-    const openModal = (podcastName: string) => {
+    const router =  useRouter();
+
+    const fetchData = async () => {
+        try {
+            const data = await getAllPodcast(email); 
+            setPodcasts(data);
+        } catch (error) {
+            console.error("Failed to get podcast data", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchData(); 
+    }, [email]); 
+
+    const openModal = (podcastName: string,podcastId:string) => {
         setSelectedPodcast(podcastName);
+        setSelectedPodcastId(podcastId);
         setIsModalOpen(true);
     };
 
-    const closeModal = () => {
+    const closeModal = async () => {
+        await fetchData(); 
         setIsModalOpen(false);
     };
-    
+
+    const handleDelete = (id: string) => async () => {
+        try {
+            await DeletePodcast(id)
+            const updatedPodcasts = await getAllPodcast(email);
+            setPodcasts(updatedPodcasts);
+            toast.success("Podcast deleted")
+        } catch (error) {
+            console.error("Failed to delete podcast", error);
+        }
+    }
+
+    function formatDuration(durasi: number) {
+        if (durasi) {
+            const hours = Math.floor(durasi / 60);
+            const minutes = durasi % 60;
+            return hours > 0 ? `${hours} jam ${minutes} menit` : `${minutes} menit`;
+
+        }
+    }
+
     return (
         <div className="flex flex-col text-white-100 px-20 py-16 min-h-screen">
             <div className="px-20 py-16">
@@ -31,31 +76,21 @@ const ListPodcastPage: React.FC = () => {
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Podcast1</td>
-                                    <td>0</td>
-                                    <td>0 menit</td>
-                                    <td>
-                                        <div className="flex flex-row gap-2 items-center justify-center">
-                                            <button className="btn btn-info bg-white-100 text-md py-1 px-3"><FaList /> View</button>
-                                            <button className="btn btn-success bg-white-100 text-md py-1 px-3" onClick={() => openModal('Podcast1')}><FaPlus /> Add</button>
-                                            <button className="btn btn-error bg-white-100 text-md py-1 px-3"><FaTrash /> Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Podcast2</td>
-                                    <td>2</td>
-                                    <td>4 menit</td>
-                                    <td>
-                                        <div className="flex flex-row gap-2 items-center justify-center">
-                                            <button className="btn btn-info bg-white-100 text-md py-1 px-3"><FaList /> View</button>
-                                            <button className="btn btn-success bg-white-100 text-md py-1 px-3" onClick={() => openModal('Podcast2')}><FaPlus /> Add</button>
-                                            <button className="btn btn-error bg-white-100 text-md py-1 px-3"><FaTrash /> Delete</button>
-                                        </div>
-                                    </td>
-                                </tr>
+                            <tbody className="text-md">
+                                {podcasts.map((podcast) => (
+                                    <tr key={podcast.id}>
+                                        <td>{podcast.judul}</td>
+                                        <td>{podcast.jumlah_episode}</td>
+                                        <td>{formatDuration(podcast.total_durasi)}</td>
+                                        <td>
+                                            <div className="flex flex-row gap-2 items-center justify-center">
+                                                <button className="btn btn-info bg-white-100 text-md py-1 px-2" onClick={()=>router.push(`/podcast/${podcast.id}/podcast-episode`)}><FaList /> View All Episode</button>
+                                                <button className="btn btn-success bg-white-100 text-md py-1 px-2" onClick={() => openModal(podcast.judul,podcast.id)}><FaPlus /> Add Episode</button>
+                                                <button className="btn btn-error bg-white-100 text-md py-1 px-2" onClick={handleDelete(podcast.id)}><FaTrash /> Delete Podcast</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))}
                             </tbody>
                         </table>
                     </div>
@@ -64,7 +99,7 @@ const ListPodcastPage: React.FC = () => {
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center">
                     <div className="absolute inset-0 bg-black bg-opacity-50 backdrop-filter backdrop-blur-sm"></div>
-                    <ModalInput isOpen={isModalOpen} onClose={closeModal} podcast={selectedPodcast} />
+                    <ModalInput isOpen={isModalOpen} onClose={closeModal} podcast={selectedPodcast} podcastId={selectedPodcastId} />
                 </div>
             )}
         </div>

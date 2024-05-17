@@ -25,7 +25,6 @@ const kelola_playlist : React.FC = () => {
         useEffect(() => {
             const fetchPlaylistData = async () => {
                 try {
-                    console.log("tes");
                     // const response = await showPlaylist(params.kelolaPlaylistEmail, email);
                     const response1 = await getAllPlaylists();
                     console.log(response1);
@@ -37,7 +36,7 @@ const kelola_playlist : React.FC = () => {
             };
     
             fetchPlaylistData();
-        });
+        },[email]);
     
         if (!playlistData) {
             return <div>Loading...</div>;
@@ -48,7 +47,7 @@ const kelola_playlist : React.FC = () => {
         const handleDelete = async (id: string) => {
             try {
                 await hapusPlaylist(id);
-                const updatedPlaylist = await showPlaylist(id_user_playlist,email);
+                const updatedPlaylist = await getAllPlaylists();
                 setPlaylistData(updatedPlaylist);
             } catch (error) {
                 console.error("Failed to delete playlist:", error);
