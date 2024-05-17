@@ -20,7 +20,7 @@ export async function getSpecifiedPaket(jenis : string){
             case '3':
                 jenis_paket = "3 Bulan";
                 break;
-            case '6 ':
+            case '6':
                 jenis_paket = "6 Bulan";
                 break;
             case '12':

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../contexts/AuthContext';
-import { getDownloadedSongs } from '../actions/downloadedsongs';
+import { getDownloadedSongs, removeDownloadedSong } from '../actions/downloadedsongs';
 import toast from 'react-hot-toast';
 
 
@@ -19,14 +19,15 @@ function DownloadedSongs() {
     const [song, setSong] = useState<downloadedsongs[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
 
-    const handleHapus = () => {
-        setNotification('Berhasil menghapus lagu dari daftar unduhan!'); // Set the notification message
-        setTimeout(() => setNotification(''), 3000); // Hide the notification after 3 seconds
+    const handleHapus = async (selectedSong : downloadedsongs) => {
+        await removeDownloadedSong(email, selectedSong.id);
+        getSongs();
+        setNotification('Berhasil menghapus lagu dari daftar unduhan!'); 
+        setTimeout(() => setNotification(''), 3000); 
     };
 
-    const handleLihat = () => {
-        // TODO: Routing to specific song page
-        // router.push('/path/to/specific/song');
+    const handleLihat = async (selectedSong : downloadedsongs) => {
+        router.push(`/detail_lagu/${selectedSong.id}`);
     };
 
     async function getSongs(){
@@ -72,10 +73,10 @@ function DownloadedSongs() {
                                 <td className="py-2 px-4 text-center">{item.title}</td>
                                 <td className="py-2 px-4 text-center">{item.by}</td>
                                 <td className="py-2 px-4 flex justify-around">
-                                    <button onClick={handleLihat} className="btn btn-ghost btn-s text-lg h-full text-blue-500 hover:text-white bg-transparent">
+                                    <button onClick={() => handleLihat(item)} className="btn btn-ghost btn-s text-lg h-full text-blue-500 hover:text-white bg-transparent">
                                         Lihat
                                     </button>
-                                    <button onClick={handleHapus} className="btn btn-ghost btn-s text-lg h-full text-red-500 hover:text-white bg-transparent">
+                                    <button onClick={() => handleHapus(item)}  className="btn btn-ghost btn-s text-lg h-full text-red-500 hover:text-white bg-transparent">
                                         Hapus
                                     </button>
                                 </td>
@@ -84,7 +85,7 @@ function DownloadedSongs() {
                             {song.length === 0 && (
                             <tr>
                                 <td colSpan={4} className="py-2 px-4 text-center">Kamu belum menggunggah lagu apapun</td>
-                                </tr>
+                            </tr>
                             )}
                         </tbody>
                     </table>

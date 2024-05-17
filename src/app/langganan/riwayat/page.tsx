@@ -72,8 +72,8 @@ function riwayatLangganan() {
                             ))}
                             {riwayat.length === 0 && (
                             <tr>
-                                <td colSpan={4} className="py-2 px-4 text-center">Tidak ada riwayat transaksi</td>
-                                </tr>
+                                <td colSpan={5} className="py-2 px-4 text-center">Tidak ada riwayat transaksi</td>
+                            </tr>
                             )}
                         </tbody>
                     </table>

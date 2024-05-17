@@ -37,7 +37,15 @@ const SearchBar = () => {
 
   const handleLihat = (item: SearchResult) => {
     // Handle the view action, navigate to the detail page based on item type
-    router.push(`/detail_lagu/${item.id}`);
+    if (item.type == "SONG"){
+      router.push(`/detail_lagu/${item.id}`);
+    } else if (item.type == "PODCAST") {     
+      router.push(`/detail_podcast/${item.id}`);
+    } else {
+      console.log(item.title);
+      // router.push(`/detail_podcast/${item.id}`);
+    }
+    
   };
 
   return (
