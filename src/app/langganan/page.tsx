@@ -22,7 +22,7 @@ const TabelLangganan = () => {
                 router.push(`/langganan/pembayaran/1`);
                 break;
             case '3 Bulan':
-                router.push(`/langganan/pembayaran/2`);
+                router.push(`/langganan/pembayaran/3`);
                 break;
             case '6 Bulan':
                 router.push(`/langganan/pembayaran/6`);
