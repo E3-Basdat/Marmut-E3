@@ -1,59 +1,78 @@
-const DetailChartPage = () => {
+"use client"
+import React, { useEffect } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { getDaftarLaguChart } from '@/app/actions/getChartDetail';
+
+
+
+
+const DetailChartPlaylist: React.FC = () => {
+    const router = useRouter();
+    const params = useParams();
+    const chartId = params;
+
+    const handleDaftarLaguChart = async () => {
+        try {
+            const daftarLagu  = getDaftarLaguChart(params.chartId as string);
+
+        }
+        catch (error) {
+            console.error("Failed to get chart data");
+        }
+    }
+
+    useEffect(() => {
+        handleDaftarLaguChart()
+    },[chartId])
     return (
-        <div className="flex flex-col text-white-100 px-8  xl:px-20 py-16 min-h-screen ">
-            <div className="w-full lg:px-20 py-24 ">
-                <h1 className="text-5xl font-bold text-center">Top Chart in Marmut</h1>
-                <div className="w-full mt-24">
-                    <div className="flex flex-col xl:flex-row gap-16 justify-between w-full items-center">
-                        <div className="card w-96 glass" style={{ width: '300px', minHeight: '400px' }}>
-                            <figure><img src="/images.png" alt="car!" /></figure>
-                            <div className="card-body" style={{ flex: '1', overflow: 'auto' }}>
-                                <h2 className="card-title">Daily Top 20</h2>
-                                <p>Experience today's most popular picks!</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn ">Learn now!</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card w-96 glass" style={{ width: '300px', minHeight: '400px' }}>
-                            <figure><img src="/images2.jpg" alt="car!" /></figure>
-                            <div className="card-body" style={{ flex: '1', overflow: 'auto' }}>
-                                <h2 className="card-title">Weekly Top 20</h2>
-                                <p>Discover what's trending this week!</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn ">Lihat Daftar Lagu</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card w-96 glass" style={{ width: '300px', minHeight: '400px' }}>
-                            <figure><img src="/images3.jpg" alt="car!" /></figure>
-                            <div className="card-body" style={{ flex: '1', overflow: 'auto' }}>
-                                <h2 className="card-title">Monthly Top 20</h2>
-                                <p>Unveil the hottest picks of the month!</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn ">Lihat Daftar Lagu</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="card w-96 glass" style={{ width: '300px', minHeight: '400px' }}>
-                            <figure><img src="/images4.jpg" alt="car!" /></figure>
-                            <div className="card-body" style={{ flex: '1', overflow: 'auto' }}>
-                                <h2 className="card-title">Yearly Top 20</h2>
-                                <p>Get a glimpse of the year's top tunes!</p>
-                                <div className="card-actions justify-end">
-                                    <button className="btn ">Lihat Daftar Lagu</button>
-                                </div>
-                            </div>
-                        </div>
-                       
+        <div className="flex flex-col text-white-100 px-20 py-16 min-h-screen ">
+            <div className="px-20 py-16">
+                <h1 className="text-4xl font-bold mb-8">Top Placeholder</h1>
+                <div className='flex flex-col gap-4 text-lg'>
+
+                    <div>
+                        <button className="px-8 py-2 bg-green-200 rounded-lg text-white-100" onClick={() => router.back()}>
+                            Kembali
+                        </button>
 
                     </div>
-                </div>
 
+                </div>
+            </div>
+            <div className="px-20 py-2">
+                <h2 className="text-2xl font-bold mb-4">Daftar Lagu</h2>
+                <table className="table w-full text-white-100">
+                    <thead className='text-white-100 text-lg'>
+                        <tr>
+                            <th >Judul Lagu</th>
+                            <th >Oleh</th>
+                            <th >Tanggal Rilis</th>
+                            <th >Total Plays</th>
+                            <th >Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Song1</td>
+                            <td>Artist1</td>
+                            <td>09/03/2024</td>
+                            <td>21000</td>
+                            <td><button className="btn btn-success bg-white-100">Lihat</button></td>
+                        </tr>
+                        <tr>
+                            <td>Song2</td>
+                            <td>Artist2</td>
+                            <td>02/03/2024</td>
+                            <td>19000 </td>
+                            <td><button className="btn btn-success bg-white-100">Lihat</button></td>
+                        </tr>
+                        {/* Add more episodes here */}
+                    </tbody>
+                </table>
             </div>
         </div>
-    );
+    )
+
 }
 
-
-export default DetailChartPage;
+export default DetailChartPlaylist;
