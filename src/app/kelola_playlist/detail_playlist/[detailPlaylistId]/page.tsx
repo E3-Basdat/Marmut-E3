@@ -1,7 +1,7 @@
 "use client";
 import { useRouter, useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { detailPlaylist } from "@/app/actions/kelolaPlaylist";
+import { detailPlaylist,hapusLagu } from "@/app/actions/kelolaPlaylist";
 import { playPlaylist } from "@/app/actions/playPlaylist";
 
 const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
@@ -23,11 +23,21 @@ const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
         fetchPlaylistData();
     });
 
+    const handleDelete = async (id: string) => {
+        try {
+            await hapusLagu(id);
+            const updatedPlaylist = await detailPlaylist(params.detailPlaylistId);
+            setPlaylistData(updatedPlaylist);
+        } catch (error) {
+            console.error("Failed to delete playlist:", error);
+        }
+    };
+
     if (!playlistData) {
         return <div>Loading...</div>;
     }
 
-    const { judul_playlist, nama_pembuat, deskripsi, jumlah_lagu, tanggal_dibuat, total_durasi } = playlistData[0];
+    const { judul_playlist, nama_pembuat, deskripsi, jumlah_lagu, tanggal_dibuat, id_song ,total_durasi } = playlistData[0];
     
 
 
@@ -65,17 +75,21 @@ const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
                             <td className="border px-4 py-2">
                             <button className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat</button>
                             <button className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Play</button>
-                            <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
+                            <button onClick={() =>handleDelete(song.id_song)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
             <div className="flex flex-col gap-8 w-full justify-center items-center">
-                <button onClick={() => router.push('/kelola_playlist/detail_playlist/tambah_lagu')} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                <button 
+                onClick={() => router.push(`/kelola_playlist/detail_playlist/tambah_lagu/${params.detailPlaylistId}`)} 
+                className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4"
+                >
                     Tambah Lagu
                 </button>
-                <button onClick={() => router.push('/kelola_playlist')} className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                <button onClick={() => router.push(`/kelola_playlist/${params.detailPlaylistId}`)}
+                 className="bg-gray-500 hover:bg-gray-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Kembali
                 </button>
             </div>

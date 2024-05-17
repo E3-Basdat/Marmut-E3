@@ -1,13 +1,12 @@
+"use client"; 
 import React, { useState, useEffect } from "react";
-import { listLagu,tambahLagu } from "@/app/actions/kelolaPlaylist";
+import { listLagu, tambahLagu, cariIdLagu, cariIdPlaylist } from "@/app/actions/kelolaPlaylist";
 
-
-const TambahLagu= ({ params }: { params: { tambahLaguId: string } }) => {
+const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
     const [selectedSong, setSelectedSong] = useState<string>("");
     const [songs, setSongs] = useState<string[]>([]);
 
     useEffect(() => {
-        
         const fetchSongs = async () => {
             try {
                 const data = await listLagu();
@@ -21,23 +20,23 @@ const TambahLagu= ({ params }: { params: { tambahLaguId: string } }) => {
         };
 
         fetchSongs();
-    }, []); 
+    }, []);
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         console.log("Lagu yang dipilih:", selectedSong);
-        
-        const formData = new FormData(event.target as HTMLFormElement);
-        formData.append("selectedSong", selectedSong);
-    
+
+        const [judulLagu] = selectedSong.split(" - ");
+
         try {
-            await tambahLagu(formData, params.tambahLaguId);
+            const id_konten = await cariIdLagu(judulLagu);
+            const id_playlist = await cariIdPlaylist(params.tambahLaguId);
+            await tambahLagu(id_playlist, id_konten);
             console.log("Lagu berhasil ditambahkan.");
         } catch (error) {
             console.error("Gagal menambahkan lagu:", error);
         }
     };
-    
 
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center justify-center gap-16 font-bold p-48">
@@ -50,7 +49,8 @@ const TambahLagu= ({ params }: { params: { tambahLaguId: string } }) => {
                         name="song"
                         value={selectedSong}
                         onChange={(e) => setSelectedSong(e.target.value)}
-                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline bg-gray-700 text-white"
+                        style={{ color: 'white' }}
                     >
                         <option value="">Pilih Lagu...</option>
                         {songs.map((song, index) => (

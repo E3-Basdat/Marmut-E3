@@ -1,10 +1,25 @@
 "use client";
+import { useAuth } from "@/app/contexts/AuthContext";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 
 const TambahPlaylist= ({ params }: { params: { tambahPlaylistId: string } })=> {
     const [judulPlaylist, setJudulPlaylist] = useState<string>("");
     const [deskripsiPlaylist, setDeskripsiPlaylist] = useState<string>("");
+    const router = useRouter();
+    const auth = useAuth();
+    const email = auth.email;
+    const isAuthenticated = auth.isAuthenticated;
+
+    // if(isLoaded){
+
+    // }
+    if(!isAuthenticated){
+        router.push('/auth/login');
+
+    }
+    
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();

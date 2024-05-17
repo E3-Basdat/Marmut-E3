@@ -1,7 +1,9 @@
 "use server";
 import { sql } from "@vercel/postgres";
+import { useAuth } from "../contexts/AuthContext";
 
 export async function playSong(id: string) {
+    const  auth = useAuth();
     try {
         console.log("Fetching song details for ID:", id);
         const { rows } = await sql`
