@@ -99,7 +99,7 @@ const daftar_lagu: React.FC = () => {
                             <td className="border px-4 py-2">{song.totalPlaySong}</td>
                             <td className="border px-4 py-2">{song.totalDownloadSong}</td>
                             <td className="border px-4 py-2">
-                                <button onClick={() => router.push('/detail_lagu')} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Detail</button>
+                                <button onClick={() => router.push(`/detail_lagu/${song.idKonten}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Detail</button>
                                 <button onClick={() => handleDelete(song.idKonten)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
                             </td>
                         </tr>

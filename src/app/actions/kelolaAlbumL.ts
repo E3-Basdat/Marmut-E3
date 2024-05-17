@@ -7,7 +7,7 @@ export async function fetchAlbums(idLabel: string) {
             SELECT judul, jumlah_lagu, total_durasi 
             FROM ALBUM 
             WHERE id_label = ${idLabel}
-            `;
+        `;
         return results.rows.map(row => ({
             judul: row.judul,
             jumlahLagu: row.jumlah_lagu,
