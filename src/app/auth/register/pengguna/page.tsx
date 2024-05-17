@@ -25,7 +25,7 @@ const Pengguna: React.FC = () => {
         }
 
         catch(err){
-            throw new Error(`Error: ${err}`);
+            toast.error("Failed to register")
         }
         
         
