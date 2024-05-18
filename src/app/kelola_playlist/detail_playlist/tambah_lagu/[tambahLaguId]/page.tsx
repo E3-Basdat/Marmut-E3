@@ -1,11 +1,15 @@
 "use client"; 
 import React, { useState, useEffect } from "react";
 import { listLagu, tambahLagu, cariIdLagu, cariIdPlaylist, cekPlaylist } from "@/app/actions/kelolaPlaylist";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+
 
 const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
     const [selectedSong, setSelectedSong] = useState<string>("");
     const [songs, setSongs] = useState<string[]>([]);
     const [errorMessage, setErrorMessage] = useState<string>("");
+    const router = useRouter();
 
     useEffect(() => {
         const fetchSongs = async () => {
@@ -25,7 +29,7 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("Lagu yang dipilih:", selectedSong);
+        console.log("Selected song:", selectedSong);
 
         const [judulLagu] = selectedSong.split(" - ");
 
@@ -33,24 +37,28 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
             const fetch_id = await cariIdLagu(judulLagu);
             const id_playlist = await cariIdPlaylist(params.tambahLaguId);
 
-            const {id_konten} = fetch_id;
+            const { id_konten } = fetch_id;
+
+            console.log("id_user_playlist:", params.tambahLaguId);
+            console.log("id_konten:", id_konten);
+            console.log("id_playlist:", id_playlist);
+
+            const isExist = await cekPlaylist(id_konten, params.tambahLaguId);
             
 
-            console.log("onten : ",id_konten);
-            console.log(id_playlist);
-
-            const isExist = await cekPlaylist(id_konten ,params.tambahLaguId);
-
-            if (!isExist) {
-                setErrorMessage("Lagu sudah ada di dalam playlist.");
+            if (isExist) {
+                toast.error("Lagu sudah ada di dalam playlist.");
                 return;
             }
 
+            
             await tambahLagu(id_playlist, id_konten);
             console.log("Lagu berhasil ditambahkan.");
-            setErrorMessage("");  // Clear any previous error message
+            toast.success("Lagu berhasil ditambahkan.");
+
+            router.back()
         } catch (error) {
-            console.error("Gagal menambahkan lagu:", error);
+            console.error("Failed to add song:", error);
         }
     };
 

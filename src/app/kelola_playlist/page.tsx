@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState, } from "react";
 import { showPlaylist,hapusPlaylist,getAllPlaylists } from "@/app/actions/kelolaPlaylist";
 import { useAuth } from "@/app/contexts/AuthContext";
+import toast from "react-hot-toast";
 
 const kelola_playlist : React.FC = () => {
     const router = useRouter();
@@ -49,6 +50,7 @@ const kelola_playlist : React.FC = () => {
                 await hapusPlaylist(id);
                 const updatedPlaylist = await getAllPlaylists();
                 setPlaylistData(updatedPlaylist);
+                toast.success("Playlsit deleted");
             } catch (error) {
                 console.error("Failed to delete playlist:", error);
             }
@@ -83,7 +85,7 @@ const kelola_playlist : React.FC = () => {
                             <td className="border px-4 py-2">
                             <button onClick={() => router.push(`/kelola_playlist/detail_playlist/${song.id_user_playlist}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Detail</button>
                             <button onClick={() => router.push(`/kelola_playlist/ubah_playlist/${song.id_user_playlist}`)}className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Ubah</button>
-                            <button  onClick={() =>handleDelete(song.id)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
+                            <button  onClick={() =>handleDelete(song.id_user_playlist)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
                             </td>
                         </tr>
                     ))}
