@@ -56,6 +56,11 @@ async function getSongwriterIdByName(songwriterName: string): Promise<string> {
 
 }
 
+export async function getArtistNameByEmail(email: string) {
+    const results= await sql`SELECT nama FROM AKUN WHERE email = ${email}`;
+    return results.rows.map(row => row.nama as string);
+}
+
 export async function createLagu(formData: FormData) {
     const judulLagu = formData.get('judulLagu') as string;
     const artistName = formData.get('artist') as string;

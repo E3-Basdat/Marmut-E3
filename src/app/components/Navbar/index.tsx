@@ -89,7 +89,7 @@ const Navbar = () => {
                                         </NavLink>
                                     )}
                                     {(role.includes("artist") || role.includes("songwriter") || role.includes("label")) && (
-                                        <NavLink href="/royalty" isActive={pathname === "/royalty"}>
+                                        <NavLink href="/royalti" isActive={pathname === "/royalti"}>
                                             Cek Royalti
                                         </NavLink>
                                     )}

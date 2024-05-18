@@ -1,6 +1,6 @@
 "use client"
 import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
-import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenre, fetchSelectedSongwriters } from "@/app/actions/createAlbumAS";
+import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenre, getArtistNameByEmail } from "@/app/actions/createAlbumAS";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
@@ -11,6 +11,7 @@ const create_album: React.FC = () => {
     const [label, setLabel] = useState<string>("");
     const [labels, setLabels] = useState<string[]>([]);
     const [artist, setArtist] = useState<string[]>([]);
+    const [artistName, setArtistName] = useState<string>("");
     const [songwriters, setSongwriters] = useState<string[]>([]);
     const [selectedSongwriters, setSelectedSongwriters] = useState<string[]>([]);
     const [genres, setGenres] = useState<string[]>([]);
@@ -23,20 +24,22 @@ const create_album: React.FC = () => {
         if (email) {
             const loadData = async () => {
                 try {
-                    const [fetchedLabels, fetchedArtists, fetchedSongwriters, fetchedGenres, fetchedSelectedSongwriters] = await Promise.all([
+                    const [fetchedLabels, fetchedArtists, fetchedSongwriters, fetchedGenres] = await Promise.all([
                         fetchLabelNames(),
                         fetchArtist(),
                         fetchSongwriter(),
-                        fetchGenre(),
-                        fetchSelectedSongwriters(email),
+                        fetchGenre()
                     ]);
                     setLabels(fetchedLabels);
                     setArtist(fetchedArtists);
                     setSongwriters(fetchedSongwriters);
                     setGenres(fetchedGenres);
+
+                    const artistName = await getArtistNameByEmail(email);  // Fetch artist name by email
+                    setArtistName(artistName[0]);
+
                     if(email){
-                        const songWriterName = await getSongWriterName(email)
-                        console.log(songWriterName)
+                        const songWriterName = await getSongWriterName(email);
                         if (role.includes("songwriter")) {
                             const songwriter = fetchedSongwriters.filter(sw => sw== songWriterName);
                             setSongWriter(songWriterName)
@@ -120,7 +123,7 @@ const create_album: React.FC = () => {
                 <div className='mb-4'>
                     <label>Artist</label>
                     {role.includes('artist') ? (
-                        <input type="text" value={email} readOnly className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
+                        <input type="text" value={artistName} name="artist" readOnly className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black" />
                     ) : (
                         <select name="artist" className="border-2 border-gray-200 rounded-lg w-full py-4 px-3 text-white bg-black">
                             <option value="">Select Artist</option>
