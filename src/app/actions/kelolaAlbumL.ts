@@ -4,11 +4,12 @@ import { sql } from "@vercel/postgres";
 export async function fetchAlbums(idLabel: string) {
     try {
         const results = await sql`
-            SELECT judul, jumlah_lagu, total_durasi 
+            SELECT id, judul, jumlah_lagu, total_durasi 
             FROM ALBUM 
             WHERE id_label = ${idLabel}
         `;
         return results.rows.map(row => ({
+            id: row.id,
             judul: row.judul,
             jumlahLagu: row.jumlah_lagu,
             totalDurasi: row.total_durasi

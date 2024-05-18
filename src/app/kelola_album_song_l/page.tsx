@@ -6,6 +6,7 @@ import { fetchAlbums, deleteAlbum } from "../actions/kelolaAlbumL";
 import { useAuth } from "../contexts/AuthContext";
 
 interface Album {
+    id: string;
     judul: string;
     jumlahLagu: number;
     totalDurasi: number;
@@ -78,8 +79,8 @@ const kelola_album_l: React.FC = () => {
                             <td className="border px-4 py-2">{album.jumlahLagu}</td>
                             <td className="border px-4 py-2">{album.totalDurasi}</td>
                             <td className="border px-4 py-2">
-                                <button onClick={() => router.push(`/kelola_album_song_l/daftar_lagu/${album.judul}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Daftar Lagu</button>
-                                <button onClick={() => handleDelete(album.judul)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
+                                <button onClick={() => router.push(`/kelola_album_song_as/daftar_lagu/${album.id}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Daftar Lagu</button>
+                                <button onClick={() => handleDelete(album.id)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
                             </td>
                         </tr>
                     ))}

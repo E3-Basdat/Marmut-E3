@@ -67,6 +67,13 @@ export async function fetchAlbumsSongwriter(email: string) {
 
 export async function deleteAlbum(id: string) {
     try {
+        await sql`
+        DELETE FROM KONTEN WHERE id IN (
+            SELECT id_konten 
+            FROM SONG 
+            WHERE id_album = ${id}
+        )`;
+
         const result = await sql`
         DELETE FROM ALBUM 
         WHERE id = ${id}

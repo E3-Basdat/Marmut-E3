@@ -4,6 +4,7 @@ import { createAlbumAS, fetchLabelNames, fetchArtist, fetchSongwriter, fetchGenr
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { getSongWriterName } from "@/app/actions/getSongWriterName";
 
 const create_album: React.FC = () => {
     const { email , isAuthenticated, role } = useAuth();
@@ -15,6 +16,7 @@ const create_album: React.FC = () => {
     const [genres, setGenres] = useState<string[]>([]);
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const [songwriter,setSongWriter] = useState<string>();
     const router = useRouter();
 
     useEffect(() => {
@@ -32,8 +34,15 @@ const create_album: React.FC = () => {
                     setArtist(fetchedArtists);
                     setSongwriters(fetchedSongwriters);
                     setGenres(fetchedGenres);
-                    if (role.includes('songwriter')) {
-                        setSelectedSongwriters([email]);
+                    if(email){
+                        const songWriterName = await getSongWriterName(email)
+                        console.log(songWriterName)
+                        if (role.includes("songwriter")) {
+                            const songwriter = fetchedSongwriters.filter(sw => sw== songWriterName);
+                            setSongWriter(songWriterName)
+                            setSelectedSongwriters(songwriter);
+                        }
+    
                     }
 
                 } catch (err) {
@@ -126,7 +135,9 @@ const create_album: React.FC = () => {
                     {songwriters.map((name, index) => (
                         <div key={index}>
                             <label>
-                                <input type="checkbox" value={name} checked={selectedSongwriters.includes(name)} onChange={handleCheckboxChange(setSelectedSongwriters, selectedSongwriters)} disabled={role.includes('songwriter') && name === email} />
+                                <input type="checkbox" value={name} checked={selectedSongwriters.includes(name)} 
+                                 disabled={name===songwriter}
+                                onChange={handleCheckboxChange(setSelectedSongwriters, selectedSongwriters)} />
                                 {name}
                             </label>
                         </div>

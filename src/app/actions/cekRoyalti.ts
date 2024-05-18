@@ -44,11 +44,11 @@ export async function getRoyaltiSongwriter(email: string) {
     try {
         const results = await sql`
         SELECT 
-            KONTEN.judul AS Judul_Lagu,
-            ALBUM.judul AS Judul_Album,
-            SONG.total_play AS Total_Play,
-            SONG.total_download AS Total_Download,
-            (PEMILIK_HAK_CIPTA.rate_royalti * SONG.total_play) AS Total_Royalti_Didapat
+            KONTEN.judul AS Judul_lagu,
+            ALBUM.judul AS Judul_album,
+            SONG.total_play AS total_play,
+            SONG.total_download AS total_download,
+            (PEMILIK_HAK_CIPTA.rate_royalti * SONG.total_play) AS total_royalti 
         FROM 
             SONGWRITER
         INNER JOIN 
@@ -67,11 +67,11 @@ export async function getRoyaltiSongwriter(email: string) {
             KONTEN.judul
         `;
         return results.rows.map(row => ({
-            judulLagu: row.Judul_Lagu,
-            judulAlbum: row.Judul_Album,
-            totalPlay: row.Total_Play,
-            totalDownload: row.Total_Download,
-            totalRoyalti: row.Total_Royalti_Didapat
+            judulLagu: row.judul_lagu,
+            judulAlbum: row.judul_album,
+            totalPlay: row.total_play,
+            totalDownload: row.total_download,
+            totalRoyalti: row.total_royalti
         }));
     } catch (err: any) {
         console.error("Failed to fetch Royalti:", err);
@@ -84,11 +84,11 @@ export async function getRoyaltiLabel(email:string ) {
     try {
         const results = await sql`
         SELECT 
-            KONTEN.judul AS Judul_Lagu,
-            ALBUM.judul AS Judul_Album,
-            SONG.total_play AS Total_Play,
-            SONG.total_download AS Total_Download,
-            (PEMILIK_HAK_CIPTA.rate_royalti * SONG.total_play) AS Total_Royalti_Didapat
+            KONTEN.judul AS judul_lagu,
+            ALBUM.judul AS judul_album,
+            SUM(SONG.total_play) AS total_play,
+            SUM(SONG.total_download) AS total_download,
+            SUM(PEMILIK_HAK_CIPTA.rate_royalti * SONG.total_play) AS total_royalti
         FROM 
             LABEL
         INNER JOIN 
@@ -102,18 +102,18 @@ export async function getRoyaltiLabel(email:string ) {
         INNER JOIN 
             PEMILIK_HAK_CIPTA ON ARTIST.id_pemilik_hak_cipta = PEMILIK_HAK_CIPTA.id
         WHERE 
-            LABEL.email = ${email}
+            LABEL.email = 'asep@gmail.com'
         GROUP BY 
             KONTEN.judul, ALBUM.judul
         ORDER BY 
             KONTEN.judul
         `;
         return results.rows.map(row => ({
-            judulLagu: row.Judul_Lagu,
-            judulAlbum: row.Judul_Album,
-            totalPlay: row.Total_Play,
-            totalDownload: row.Total_Download,
-            totalRoyalti: row.Total_Royalti_Didapat
+            judulLagu: row.judul_lagu,
+            judulAlbum: row.judul_album,
+            totalPlay: row.total_play,
+            totalDownload: row.total_download,
+            totalRoyalti: row.total_royalti
         }));
     } catch (err: any) {
         console.error("Failed to fetch Royalti:", err);

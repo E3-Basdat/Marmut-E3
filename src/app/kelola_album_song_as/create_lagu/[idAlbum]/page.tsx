@@ -19,6 +19,7 @@ const create_lagu: React.FC = () => {
     const idAlbum = params.idAlbum as string;
     const [isLoaded, setIsLoaded] = useState(false);
     const [songwriter,setSongWriter] = useState<string>();
+
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -98,7 +99,6 @@ const create_lagu: React.FC = () => {
         formData.append("idAlbum", idAlbum);
 
         try {
-            console.log(formData.get("songwriters"))
             await createLagu(formData);
             toast.success("Song created successfully");
             router.replace("/kelola_album_song_as");
