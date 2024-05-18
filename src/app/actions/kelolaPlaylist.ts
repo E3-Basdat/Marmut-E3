@@ -17,7 +17,7 @@ export async function showPlaylist(id: string, email: string) {
         `;
         // AND up.email_pembuat = ${email};
 
-        console.log(rows);
+        
         
         if (rows.length > 0) {
             return rows;
@@ -57,6 +57,7 @@ export async function detailPlaylist(id: string) {
                 up.judul AS judul_playlist,
                 ak.nama AS nama_pembuat,
                 up.deskripsi,
+                up.id_user_playlist,
                 up.jumlah_lagu,
                 up.tanggal_dibuat,
                 up.total_durasi,
@@ -89,8 +90,8 @@ export async function detailPlaylist(id: string) {
                 up.id_user_playlist = ${id};
         `;
         
-        console.log(rows[0]);
-        
+      
+        console.log(rows);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -117,8 +118,6 @@ export async function getAllPlaylists() {
                 user_playlist up
             JOIN Akun ak ON up.email_pembuat = ak.email;
         `;
-        
-        console.log(rows);
         
         return rows;
     } catch (error: any) {
@@ -178,7 +177,8 @@ export async function hapusPlaylist(id: string) {
             DELETE FROM user_playlist
             WHERE id_user_playlist = ${id};
         `;
-        
+        console.log(id);
+        console.log("tes");
         console.log("Playlist deleted successfully");
     } catch (err: any) {
         console.error("Failed to delete playlist:", err);
@@ -209,6 +209,7 @@ export async function listLagu() {
 }
 
 export async function tambahLagu(id_playlist : string , id_konten: string) {
+    console.log(id_konten, id_playlist)
     try {
         await sql`
             INSERT INTO PLAYLIST_SONG (id_playlist, id_song)

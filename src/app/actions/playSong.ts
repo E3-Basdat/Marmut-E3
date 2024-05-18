@@ -88,3 +88,16 @@ export async function getAllPlaylists() {
     }
 }
 
+export async function tambahLagu(id_playlist : string , id_konten: string) {
+    try {
+        await sql`
+            INSERT INTO PLAYLIST_SONG (id_playlist, id_song)
+            VALUES (${id_playlist}, ${id_konten});
+        `;
+        
+        console.log("Lagu berhasil ditambahkan ke playlist.");
+    } catch (err: any) {
+        console.error("Gagal menambahkan lagu ke playlist:", err);
+        throw err;
+    }
+}
