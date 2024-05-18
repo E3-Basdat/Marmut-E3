@@ -79,12 +79,12 @@ const Navbar = () => {
                                         </NavLink>
                                     )}
                                     {(role.includes("artist") || role.includes("songwriter")) && (
-                                        <NavLink href="/album-and-songs" isActive={pathname === "/album-and-songs"}>
+                                        <NavLink href="/kelola_album_song_as" isActive={pathname === "/kelola_album_song_as"}>
                                             Kelola Album & Songs
                                         </NavLink>
                                     )}
                                     {role.includes("label") && (
-                                        <NavLink href="/album" isActive={pathname === '/album'}>
+                                        <NavLink href="/kelola_album_song_l" isActive={pathname === '/kelola_album_song_l'}>
                                             Kelola Album
                                         </NavLink>
                                     )}

@@ -4,6 +4,7 @@ import { createLagu, fetchArtist, fetchSongwriter, fetchGenre, fetchAlbumName } 
 import toast from "react-hot-toast";
 import { useRouter, useParams } from "next/navigation";
 import { useAuth } from "@/app/contexts/AuthContext";
+import { getSongWriterName } from "@/app/actions/getSongWriterName";
 
 const create_lagu: React.FC = () => {
     const { email , isAuthenticated, role } = useAuth();
@@ -17,7 +18,7 @@ const create_lagu: React.FC = () => {
     const params = useParams();
     const idAlbum = params.idAlbum as string;
     const [isLoaded, setIsLoaded] = useState(false);
-
+    const [songwriter,setSongWriter] = useState<string>();
     useEffect(() => {
         const loadData = async () => {
             try {
@@ -29,7 +30,16 @@ const create_lagu: React.FC = () => {
                 setArtist(fetchedArtists);
                 setSongwriters(fetchedSongwriters);
                 setGenres(fetchedGenres);
+                if(email){
+                    const songWriterName = await getSongWriterName(email)
+                    console.log(songWriterName)
+                    if (role.includes("songwriter")) {
+                        const songwriter = fetchedSongwriters.filter(sw => sw== songWriterName);
+                        setSongWriter(songWriterName)
+                        setSelectedSongwriters(songwriter);
+                    }
 
+                }
             } catch (err) {
                 console.error("Failed to fetch data:", err);
                 toast.error("Failed to load data");
@@ -37,7 +47,7 @@ const create_lagu: React.FC = () => {
         };
     
         loadData();
-    }, []);
+    }, [email]);
 
     useEffect(() => {
         if (idAlbum) {
@@ -88,6 +98,7 @@ const create_lagu: React.FC = () => {
         formData.append("idAlbum", idAlbum);
 
         try {
+            console.log(formData.get("songwriters"))
             await createLagu(formData);
             toast.success("Song created successfully");
             router.replace("/kelola_album_song_as");
@@ -122,7 +133,9 @@ const create_lagu: React.FC = () => {
                     {songwriters.map((name, index) => (
                         <div key={index}>
                             <label>
-                                <input type="checkbox" value={name} checked={selectedSongwriters.includes(name)} onChange={handleCheckboxChange(setSelectedSongwriters, selectedSongwriters)} />
+                                <input type="checkbox" value={name} checked={selectedSongwriters.includes(name)} 
+                                 disabled={name===songwriter}
+                                onChange={handleCheckboxChange(setSelectedSongwriters, selectedSongwriters)} />
                                 {name}
                             </label>
                         </div>

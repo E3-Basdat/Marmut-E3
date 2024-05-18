@@ -17,7 +17,7 @@ interface Album {
 const kelola_album_song_as: React.FC = () => {
     const [albums, setAlbums] = useState<Album[]>([]);
     const router = useRouter();
-    const { email , isAuthenticated, role } = useAuth();
+    const { email, isAuthenticated, role } = useAuth();
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
@@ -35,7 +35,7 @@ const kelola_album_song_as: React.FC = () => {
                 toast.error("Failed to load data");
             }
         };
-    
+
         loadData();
     }, [email, role]);
 
@@ -85,9 +85,26 @@ const kelola_album_song_as: React.FC = () => {
                             <td className="border px-4 py-2">{album.jumlahLagu}</td>
                             <td className="border px-4 py-2">{album.totalDurasi}</td>
                             <td className="border px-4 py-2">
-                                <button onClick={() => router.push(`/kelola_album_song_as/daftar_lagu/${album.id}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Lihat Daftar Lagu</button>
-                                <button onClick={() => router.push(`/kelola_album_song_as/create_lagu/${album.id}`)} className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Tambah Lagu</button>
-                                <button onClick={() => handleDelete(album.id)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
+                                <div className="flex flex-col gap-2 items-center justify-center">
+                                    <button
+                                        onClick={() => router.push(`/kelola_album_song_as/daftar_lagu/${album.id}`)}
+                                        className="w-3/4 bg-blue-500 hover:bg-blue-700 text-white rounded-lg px-4 py-2 transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
+                                    >
+                                        Lihat Daftar Lagu
+                                    </button>
+                                    <button
+                                        onClick={() => router.push(`/kelola_album_song_as/create_lagu/${album.id}`)}
+                                        className="w-3/4 bg-green-500 hover:bg-green-700 text-white rounded-lg px-4 py-2 transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
+                                    >
+                                        Tambah Lagu
+                                    </button>
+                                    <button
+                                        onClick={() => handleDelete(album.id)}
+                                        className="w-3/4 bg-red-500 hover:bg-red-700 text-white rounded-lg px-4 py-2 transition-all duration-300 ease-in-out shadow-md transform hover:scale-105"
+                                    >
+                                        Hapus
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}

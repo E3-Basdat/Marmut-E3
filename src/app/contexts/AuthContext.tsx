@@ -71,7 +71,7 @@ export const AuthContextProvider: React.FC<{children: React.ReactNode}> = ({ chi
         localStorage.removeItem('email');
         localStorage.removeItem('role');
         localStorage.removeItem('idLabel');
-        router.push('/');
+        router.replace('/auth/login');
     };
 
     return (
