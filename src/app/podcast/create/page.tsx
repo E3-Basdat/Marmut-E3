@@ -83,7 +83,13 @@ const CreatePodcastPage: React.FC = () => {
 
     return isMounted ? (
         <div className='flex flex-col text-white-100 text-center items-center gap-16 px-8 py-32 bg-white font-bold min-h-screen'>
+            <div className='flex flex-col gap-8'>
+
             <h1 className="text-3xl">Create Podcast</h1>
+            <button className="px-8 py-2 bg-green-200 rounded-lg text-white-100" onClick={() => router.push('/podcast/list')}>
+                            See List Podcast =&gt;
+                        </button>
+            </div>
             <form className='flex flex-col w-1/2 text-left' onSubmit={handleSubmit}>
                 <div className='mb-4'>
                     <label>Judul</label>
