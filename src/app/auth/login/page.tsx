@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { loginUser } from "@/app/actions/loginUser";
 import { useAuth } from "@/app/contexts/AuthContext";
 import toast from "react-hot-toast";
@@ -9,6 +9,7 @@ import toast from "react-hot-toast";
 const Login: React.FC = () => {
     const router = useRouter();
     const { login } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -16,12 +17,17 @@ const Login: React.FC = () => {
         try {
             const email = formData.get("email") as string;
             const password = formData.get("password") as string;
+            setIsLoading(true);
             await login(email, password);
+            setIsLoading(false);
             toast.success(`Hello ${email}`)
+
             router.push('/dashboard')
 
 
         } catch (error){
+            toast.error("Failed to login");
+            setIsLoading(false)
             console.error("Failed to login");
         }
     }
@@ -49,8 +55,8 @@ const Login: React.FC = () => {
                     </button>
 
                     <button type="submit" className="text-white-100 bg-green-100 font-semibold
-                    rounded-lg w-full py-4 mt-4">
-                        Login
+                    rounded-lg w-full py-4 mt-4" disabled={isLoading}>
+                        {isLoading ? "Loading..." : "Login"}
                     </button>
                 </div>
 
