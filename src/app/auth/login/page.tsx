@@ -22,7 +22,6 @@ const Login: React.FC = () => {
 
 
         } catch (error){
-            console.log("hallo")
             console.error("Failed to login");
         }
     }

@@ -38,7 +38,6 @@ const create_lagu: React.FC = () => {
 
                 if(email){
                     const songWriterName = await getSongWriterName(email)
-                    console.log(songWriterName)
                     if (role.includes("songwriter")) {
                         const songwriter = fetchedSongwriters.filter(sw => sw== songWriterName);
                         setSongWriter(songWriterName)

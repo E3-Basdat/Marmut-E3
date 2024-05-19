@@ -21,13 +21,13 @@ const PlaySong: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { playSongId } = params;
     const [playlists, setPlaylists] = useState<any[]>([]);
+    const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         const fetchSongData = async () => {
             try {
                 if (params.playSongId) {
                     const song = await playSong(playSongId as string);
-                    console.log(song);
                     setSongData(song);
                 } else {
                     console.error("Invalid song ID");
@@ -44,7 +44,6 @@ const PlaySong: React.FC = () => {
         const fetchPlaylists = async () => {
             try {
                 const playlistsData = await getAllPlaylists();
-                console.log("Fetched Playlists: ", playlistsData); // Log playlists data
                 setPlaylists(playlistsData);
             } catch (error) {
                 console.error("Failed to fetch playlists:", error);
@@ -76,7 +75,7 @@ const PlaySong: React.FC = () => {
     const handleAddToPlaylistSubmit = async () => {
         try {
             await tambahLagu(selectedPlaylist, playSongId as string);
-            toast.success("Song has been added to Playlist")
+            toast.success("Song has been added to Playlist");
             setMessage(true);
         } catch (error) {
             console.error("Failed to add song to playlist:", error);
@@ -86,25 +85,31 @@ const PlaySong: React.FC = () => {
     const handleButtonClick = () => {
         setIsLoading(true);
 
-        setTimeout(() => {
-            setIsLoading(false);
-            setProgress(0);
-        }, 5000);
-
-        const interval = setInterval(() => {
+        const newIntervalId = setInterval(() => {
             setProgress(prevProgress => {
                 if (prevProgress >= 100) {
-                    clearInterval(interval);
+                    clearInterval(newIntervalId);
+                    setIsLoading(false);
                     return 100;
                 } else {
                     const newProgress = prevProgress + 5;
-                    if (newProgress > 70) {
+                    if (newProgress > 70 ) {
                         tambahPlaySong(email_user, playSongId as string);
                     }
                     return newProgress;
                 }
             });
         }, 500);
+
+        setIntervalId(newIntervalId);
+    };
+
+    const handleStopClick = () => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            setIsLoading(false);
+            setIntervalId(null);
+        }
     };
 
     return (
@@ -135,9 +140,11 @@ const PlaySong: React.FC = () => {
                     disabled
                 />
                 <button onClick={handleButtonClick} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-4 w-1/4">
-                    play
+                    Play
                 </button>
-
+                <button onClick={handleStopClick} className="bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                    Stop
+                </button>
                 <div className="flex w-1/4 justify-between">
                     <button onClick={handleAddToPlaylistClick} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/2">
                         Add To Playlist

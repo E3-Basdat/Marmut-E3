@@ -65,6 +65,5 @@ export async function getDaftarLaguChart(chartId: string) {
     20;
 
     `;
-    // console.log(rows)
     return rows;
 }

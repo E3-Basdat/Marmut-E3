@@ -40,8 +40,6 @@ export async function playPlaylist(id: string) {
                 up.id_user_playlist = ${id};
         `;
         
-        console.log(rows[0]);
-        
         if (rows.length > 0) {
             return rows;
         } else {
@@ -69,8 +67,6 @@ export async function getAllPlaylists() {
             JOIN Akun ak ON up.email_pembuat = ak.email;
         `;
         
-        console.log(rows);
-        
         return rows;
     } catch (error: any) {
         console.error("Failed to fetch playlists:", error);
@@ -84,8 +80,7 @@ export async function tambahPlayPlaylist(email_pembuat: string, id_user_playlist
         await sql`
         INSERT INTO AKUN_PLAY_USER_PLAYLIST (email_pemain, id_user_playlist, email_pembuat, waktu)
         VALUES (${email_pemutar}, ${id_user_playlist}, ${email_pembuat}, CURRENT_TIMESTAMP);
-        `;
-        console.log("Lagu berhasil ditambahkan ke playlist.");
+        `;;
     } catch (err: any) {
         console.error("Gagal menambahkan lagu ke playlist:", err);
         throw err;

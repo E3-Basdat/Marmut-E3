@@ -3,11 +3,16 @@ import { sql } from "@vercel/postgres";
 
 export async function loginUser(email: string, password: string) {
     try {
+
+        await sql`
+        CALL check_and_update_subscription_status(${email})
+    `;
+
         const { rows } = await sql`
         SELECT COUNT(*) FROM AKUN
         WHERE email=${email} AND password=${password}
         `;
-     
+
         if (rows[0].count == 1) {
             const roles: ('' | 'pengguna' | 'podcaster' | 'songwriter' | 'artist' | 'premium')[] = [];
 
@@ -32,7 +37,7 @@ export async function loginUser(email: string, password: string) {
             }
 
 
-            if (roles.length  >=0) {
+            if (roles.length >= 0) {
                 roles.push('pengguna');
             }
 

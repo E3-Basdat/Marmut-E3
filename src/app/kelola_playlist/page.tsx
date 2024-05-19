@@ -1,7 +1,7 @@
 "use client"
 import { useRouter } from "next/navigation";
 import { useEffect, useState, } from "react";
-import { showPlaylist,hapusPlaylist,getAllPlaylists } from "@/app/actions/kelolaPlaylist";
+import { showPlaylist,hapusPlaylist,getAllPlaylists, getUserPlaylists } from "@/app/actions/kelolaPlaylist";
 import { useAuth } from "@/app/contexts/AuthContext";
 import toast from "react-hot-toast";
 
@@ -26,11 +26,8 @@ const kelola_playlist : React.FC = () => {
         useEffect(() => {
             const fetchPlaylistData = async () => {
                 try {
-                    // const response = await showPlaylist(params.kelolaPlaylistEmail, email);
-                    const response1 = await getAllPlaylists();
-                    console.log(response1);
+                    const response1 = await getUserPlaylists(email);
                     setPlaylistData(response1);
-                    console.log(response1);
                 } catch (error) {
                     console.error("Failed to fetch playlist:", error);
                 }
@@ -42,8 +39,7 @@ const kelola_playlist : React.FC = () => {
         if (!playlistData) {
             return <div>Loading...</div>;
         }
-    
-        const { judul_playlist,jumlah_lagu, durasi, id_user_playlist } = playlistData[0];
+
         
         const handleDelete = async (id: string) => {
             try {

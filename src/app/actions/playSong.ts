@@ -4,7 +4,6 @@ import { sql } from "@vercel/postgres";
 
 export async function playSong(id: string) {
     try {
-        console.log("Fetching song details for ID:", id);
         const { rows } = await sql`
         SELECT 
         k.judul,
@@ -22,9 +21,6 @@ export async function playSong(id: string) {
     WHERE k.id = ${id}
     
         `;
-
-        
-        console.log("Query result:", rows);
         if (rows.length > 0) {
             return rows[0];
         } else {
@@ -43,7 +39,6 @@ export async function tambahPlaySong(email: string, id_song: string) {
             INSERT INTO AKUN_PLAY_SONG (email_pemain, id_song, waktu)
             VALUES (${email}, ${id_song}, current_timestamp);
         `;
-        console.log("Lagu berhasil ditambahkan ke playlist.");
     } catch (err: any) {
         console.error("Gagal menambahkan lagu ke playlist:", err);
         throw err;
@@ -56,7 +51,6 @@ export async function downloadSong(email: string, id_song: string) {
             INSERT INTO downloaded_song (id_song, email_downloader)
             VALUES (${id_song}, ${email});
         `;
-        console.log("Lagu berhasil diunduh.");
     } catch (err: any) {
         console.error("Gagal mengunduh lagu:", err);
         throw err;
@@ -79,8 +73,6 @@ export async function getAllPlaylists() {
             JOIN Akun ak ON up.email_pembuat = ak.email;
         `;
         
-        console.log(rows);
-        
         return rows;
     } catch (error: any) {
         console.error("Failed to fetch playlists:", error);
@@ -94,8 +86,6 @@ export async function tambahLagu(id_playlist : string , id_konten: string) {
             INSERT INTO PLAYLIST_SONG (id_playlist, id_song)
             VALUES (${id_playlist}, ${id_konten});
         `;
-        
-        console.log("Lagu berhasil ditambahkan ke playlist.");
     } catch (err: any) {
         console.error("Gagal menambahkan lagu ke playlist:", err);
         throw err;

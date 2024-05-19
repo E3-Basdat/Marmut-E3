@@ -14,8 +14,6 @@ const create_album: React.FC = () => {
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.target as HTMLFormElement);
-        console.log({ title, label });
-
         try {
             
         } catch (err) {

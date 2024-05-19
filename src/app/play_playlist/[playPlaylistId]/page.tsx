@@ -16,7 +16,6 @@ const PlayPlaylist = ({ params }: { params: { playPlaylistId: string } }) => {
             try {
                 const response = await playPlaylist(params.playPlaylistId);
                 setPlaylistData(response);
-                console.log(response);
             } catch (error) {
                 console.error("Failed to fetch playlist:", error);
             }
@@ -35,7 +34,6 @@ const PlayPlaylist = ({ params }: { params: { playPlaylistId: string } }) => {
     const handleShufflePlay = async () => {
         try {
             await tambahPlayPlaylist(nama_pembuat, params.playPlaylistId, email_user); // Ganti dengan parameter yang sesuai
-            console.log("Berhasil menambahkan playlist untuk diputar.");
         } catch (error) {
             console.error("Gagal menambahkan playlist untuk diputar:", error);
         }

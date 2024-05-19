@@ -16,9 +16,6 @@ const UbahPlaylist= ({ params }: { params: { ubahPlaylistId: string } }) => {
 
         try {
             await ubahPlaylist(formData,params.ubahPlaylistId);
-            console.log("FormData:", formData);
-            console.log("Judul:", judulPlaylist);
-            console.log("Deskripsi:", deskripsiPlaylist);
             toast.success("Playlist updated successfully");
             setJudulPlaylist("");
             setDeskripsiPlaylist("");

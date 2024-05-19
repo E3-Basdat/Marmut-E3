@@ -30,7 +30,6 @@ const Dashboard: React.FC = () => {
     const { isAuthenticated, email, idLabel, role } = useAuth();
     const [isLoaded, setIsLoaded] = useState(false);
 
-
     const handleUserData = async () => {
         try {
             const userData = await getUserData(role, email);

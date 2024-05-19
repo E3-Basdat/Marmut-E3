@@ -31,7 +31,6 @@ const SearchBar = () => {
   const handleSearch = async () => {
     if (!query) return;
     const response = await getSearch(query);
-    console.log(response.rows);
     setResults(response.rows as SearchResult[]); 
   };
 

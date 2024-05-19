@@ -30,6 +30,31 @@ export async function showPlaylist(id: string) {
     }
 }
 
+export async function getUserPlaylists(email:string) {
+    try {
+        const { rows } = await sql`
+            SELECT
+                up.id_user_playlist,
+                up.judul AS judul_playlist,
+                ak.nama AS nama_pembuat,
+                up.deskripsi,
+                up.jumlah_lagu,
+                up.tanggal_dibuat,
+                up.total_durasi
+            FROM
+                user_playlist up
+            JOIN Akun ak ON up.email_pembuat = ak.email
+            WHERE up.email_pembuat = ${email};
+        `;
+        
+        return rows;
+    } catch (error: any) {
+        console.error("Failed to fetch playlists:", error);
+        throw error;
+    }
+}
+
+
 export async function showPlaylistDashboard(email: string) {
     try {
         const { rows } = await sql`
@@ -50,58 +75,6 @@ export async function showPlaylistDashboard(email: string) {
     }
 }
 
-// export async function detailPlaylist(id: string) {
-//     try {
-//         const { rows } = await sql`
-//             SELECT
-//                 up.judul AS judul_playlist,
-//                 ak.nama AS nama_pembuat,
-//                 up.deskripsi,
-//                 up.id_user_playlist,
-//                 up.jumlah_lagu,
-//                 up.tanggal_dibuat,
-//                 up.total_durasi,
-//                 k.judul AS judul_lagu,
-//                 pls.id_song,
-//                 k.durasi,
-//                 subquery.nama_penyanyi
-//             FROM
-//                 user_playlist up
-//             JOIN Akun ak ON up.email_pembuat = ak.email
-//             JOIN Playlist pl ON up.id_playlist = pl.id
-//             JOIN Playlist_Song pls ON pl.id = pls.id_playlist
-//             JOIN Konten k ON pls.id_song = k.id
-//             LEFT JOIN (
-//                 SELECT
-//                     pl.id,
-//                     ak.nama as nama_penyanyi
-//                 FROM
-//                     Playlist pl
-//                 JOIN Playlist_Song pls ON pl.id = pls.id_playlist
-//                 JOIN Konten k ON pls.id_song = k.id
-//                 JOIN song sg ON k.id = sg.id_konten
-//                 JOIN artist  ar ON sg.id_artist = ar.id
-//                 JOIN akun ak ON ar.email_akun = ak.email
-//                 GROUP BY
-//                     pl.id,
-//                     ak.nama
-//             ) AS subquery ON pl.id = subquery.id
-//             WHERE
-//                 up.id_user_playlist = ${id};
-//         `;
-        
-      
-//         console.log(rows);
-//         if (rows.length > 0) {
-//             return rows;
-//         } else {
-//             return null; // Jika lagu tidak ditemukan
-//         }
-//     } catch (error: any) {
-//         console.error("Failed to read the playlist:", error);
-//         throw error;
-//     }
-// }
 
 export async function detailPlaylist(id: string) {
     try {
@@ -119,8 +92,6 @@ export async function detailPlaylist(id: string) {
             WHERE
                 up.id_user_playlist = ${id};
         `;
-        
-        console.log(rows);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -146,8 +117,6 @@ export async function getSongsInPlaylist(id: string) {
             WHERE
                 up.id_user_playlist = ${id};
         `;
-        
-        console.log(rows);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -194,8 +163,6 @@ export async function ubahPlaylist(formData: FormData, id : string) {
             SET judul = ${judul}, deskripsi = ${deskripsi}
             WHERE id_user_playlist = ${id};
         `;
-        
-        console.log("Playlist updated successfully");
     } catch (err: any) {
         console.error("Failed to update playlist:", err);
         throw err;
@@ -220,7 +187,6 @@ export async function tambahPlaylist(formData: FormData, email : string) {
         INSERT INTO USER_PLAYLIST (email_pembuat, id_user_playlist, judul, deskripsi, jumlah_lagu, tanggal_dibuat, id_playlist, total_durasi) 
 VALUES (${email}, ${id_user_playlist}, ${judul}, ${deskripsi}, ${jumlah_lagu}, CURRENT_DATE, ${id_playlist}, ${total_durasi});
         `;
-        console.log("Playlist updated successfully");
     } catch (err: any) {
         console.error("Failed to update playlist:", err);
         throw err;
@@ -234,9 +200,6 @@ export async function hapusPlaylist(id: string) {
             DELETE FROM user_playlist
             WHERE id_user_playlist = ${id};
         `;
-        console.log(id);
-        console.log("tes");
-        console.log("Playlist deleted successfully");
     } catch (err: any) {
         console.error("Failed to delete playlist:", err);
         throw err;
@@ -253,7 +216,6 @@ export async function listLagu() {
         JOIN KONTEN k ON s.id_konten = k.id;
 
         `;
-        console.log(rows[0]);
         if (rows.length > 0) {
             return rows;
         } else {
@@ -273,9 +235,7 @@ export async function tambahLagu(id_playlist : string , id_konten: string) {
             VALUES (${id_playlist}, ${id_konten});
         `;
         
-        console.log("Lagu berhasil ditambahkan ke playlist.");
     } catch (err: any) {
-        console.log("id nonten :",id_konten,"id playlist :", id_playlist);
         console.error("Gagal menambahkan lagu ke playlist:", err);
         throw err;
     }
@@ -336,8 +296,6 @@ export async function hapusLagu(id: string) {
             DELETE FROM playlist_song
             WHERE id_song = ${id};
         `;
-        
-        console.log("Playlist deleted successfully");
     } catch (err: any) {
         console.error("Failed to delete playlist:", err);
         throw err;

@@ -57,13 +57,10 @@ export async function registerUser(formData: FormData) {
         VALUES (gen_random_uuid(), ${email}, ${rows[0].id})
         `;
       }
-      await sql`
-        INSERT INTO NONPREMIUM VALUES (${email}),
-      `;
     }
     
   } catch (err: any) {
-    console.error("Failed to register user:", err);
+    throw new Error(`Failed to register user: ${err.message || err}`);
   }
 }
 
@@ -86,7 +83,7 @@ export async function registerLabel(formData: FormData) {
         VALUES (gen_random_uuid(), ${rows[0].id}, ${email}, ${password}, ${nama}, ${kontak})
         `;
 
-  } catch (error: any) {
-    console.error("Failed to register label:", error.message || error);
+  } catch (err: any) {
+    throw new Error(`Failed to register label: ${err.message || err}`);
   }
 }

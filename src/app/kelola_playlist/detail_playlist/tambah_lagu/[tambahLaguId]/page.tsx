@@ -29,7 +29,6 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log("Selected song:", selectedSong);
 
         const [judulLagu] = selectedSong.split(" - ");
 
@@ -38,10 +37,6 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
             const id_playlist = await cariIdPlaylist(params.tambahLaguId);
 
             const { id_konten } = fetch_id;
-
-            console.log("id_user_playlist:", params.tambahLaguId);
-            console.log("id_konten:", id_konten);
-            console.log("id_playlist:", id_playlist);
 
             const isExist = await cekPlaylist(id_konten, params.tambahLaguId);
             
@@ -53,7 +48,6 @@ const TambahLagu = ({ params }: { params: { tambahLaguId: string } }) => {
 
             
             await tambahLagu(id_playlist, id_konten);
-            console.log("Lagu berhasil ditambahkan.");
             toast.success("Lagu berhasil ditambahkan.");
 
             router.back()

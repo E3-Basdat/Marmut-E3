@@ -6,7 +6,6 @@ import { useAuth } from "./contexts/AuthContext";
 export default function Home() {
   const router = useRouter();
   const { isAuthenticated,role} = useAuth(); 
-  console.log(role);
   return (
     <main className="flex min-h-screen text-white-100 flex-col items-center gap-16 p-48">
       {!isAuthenticated && (

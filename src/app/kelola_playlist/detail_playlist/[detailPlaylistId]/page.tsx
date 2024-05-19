@@ -43,7 +43,6 @@ const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
     const handleShufflePlay = async () => {
         try {
             await tambahPlayPlaylist(nama_pembuat, params.detailPlaylistId, email_user); // Ganti dengan parameter yang sesuai
-            console.log("Berhasil menambahkan playlist untuk diputar.");
         } catch (error) {
             console.error("Gagal menambahkan playlist untuk diputar:", error);
         }
@@ -64,7 +63,7 @@ const PlayPlaylist = ({ params }: { params: { detailPlaylistId: string } }) => {
                 <div className="mb-2 text-left"><span className="font-bold">Pembuat:</span> {nama_pembuat}</div>
                 <div className="mb-2 text-left"><span className="font-bold">Jumlah Lagu:</span> {jumlah_lagu}</div>
                 <div className="mb-2 text-left"><span className="font-bold">Total Durasi:</span> {total_durasi}</div>
-                <div className="mb-2 text-left"><span className="font-bold">Tanggal Dibuat:</span> {new Date(tanggal_dibuat).toDateString()}</div>
+                <div className="mb-2 text-left"><span className="font-bold">Tanggal Dibuat:</span> {new Date(tanggal_dibuat).toLocaleDateString()}</div>
                 <div className="mb-2 text-left"><span className="font-bold">Deskripsi:</span> {deskripsi}</div>
                 <button onClick={handleShufflePlay} className="bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Shuffle Play
