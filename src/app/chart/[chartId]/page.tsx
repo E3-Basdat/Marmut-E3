@@ -72,7 +72,7 @@ const DetailChartPlaylist: React.FC = () => {
                                 <td>{lagu.play_count}</td>
                                 <td>
                                     <div className="flex py-4">
-                                        <button className="btn btn-success bg-white px-8">Lihat</button>
+                                        <button className="btn btn-success bg-white px-8" onClick={()=>router.push(`/detail_lagu/${lagu.id_song}`)}>Lihat</button>
                                     </div>
                                 </td>
                             </tr>
