@@ -1,23 +1,30 @@
 "use client";
 import React, { useState } from "react";
+import { ubahPlaylist } from "@/app/actions/kelolaPlaylist";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
-const UbahPlaylist : React.FC = () => {
+const UbahPlaylist= ({ params }: { params: { ubahPlaylistId: string } }) => {
     const [judulPlaylist, setJudulPlaylist] = useState<string>("");
     const [deskripsiPlaylist, setDeskripsiPlaylist] = useState<string>("");
+    const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const formData = new FormData(event.target as HTMLFormElement);
 
-        console.log("Judul:", judulPlaylist);
-        console.log("Deskripsi:", deskripsiPlaylist);
-        setJudulPlaylist("");
-        setDeskripsiPlaylist("");
 
         try {
-            console.log("FormData:", formData);
+            await ubahPlaylist(formData,params.ubahPlaylistId);
+            toast.success("Playlist updated successfully");
+            setJudulPlaylist("");
+            setDeskripsiPlaylist("");
+            router.back();
+
         } catch (err) {
+            toast.error("Failed to update playlist");
             throw new Error(`Error: ${err}`);
+            
         }
     };
 

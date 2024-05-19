@@ -1,9 +1,64 @@
 "use client"
 import { useRouter } from "next/navigation";
+import { useEffect, useState, } from "react";
+import { showPlaylist,hapusPlaylist,getAllPlaylists, getUserPlaylists } from "@/app/actions/kelolaPlaylist";
+import { useAuth } from "@/app/contexts/AuthContext";
+import toast from "react-hot-toast";
 
-
-const kelola_playlist: React.FC = () => {
+const kelola_playlist : React.FC = () => {
     const router = useRouter();
+    const [playlistData, setPlaylistData] = useState<any>(null);
+    const auth = useAuth();
+    const email = auth.email;
+    const isAuthenticated = auth.isAuthenticated;
+    const [isLoaded, setIsLoaded] = useState(false);
+
+    useEffect(() => {
+        setIsLoaded(true);
+    }, []);
+
+    useEffect(() => {
+        if (isLoaded && !isAuthenticated) {
+            router.push("/auth/login");
+        }
+    }, [isAuthenticated,isLoaded]);
+    
+        useEffect(() => {
+            const fetchPlaylistData = async () => {
+                try {
+                    const response1 = await getUserPlaylists(email);
+                    setPlaylistData(response1);
+                } catch (error) {
+                    console.error("Failed to fetch playlist:", error);
+                }
+            };
+    
+            fetchPlaylistData();
+        },[email]);
+    
+        if (!playlistData) {
+            return <div>Loading...</div>;
+        }
+
+        
+        const handleDelete = async (id: string) => {
+            try {
+                await hapusPlaylist(id);
+                const updatedPlaylist = await getAllPlaylists();
+                setPlaylistData(updatedPlaylist);
+                toast.success("Playlsit deleted");
+            } catch (error) {
+                console.error("Failed to delete playlist:", error);
+            }
+        };
+    
+        if (!playlistData) {
+            return <div>Loading...</div>;
+        }
+
+        
+
+    
     return (
         <div className="flex min-h-screen bg-white text-white-100 flex-col items-center gap-16 font-bold p-48">
             <h1 className="text-3xl">User Playlist</h1>
@@ -17,30 +72,23 @@ const kelola_playlist: React.FC = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className="border px-4 py-2">Speak Now</td>
-                        <td className="border px-4 py-2">7</td>
-                        <td className="border px-4 py-2">31</td>
-                        <td className="border px-4 py-2">
-                            <button onClick={() => router.push('/kelola_playlist/detail_playlist')} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Detail</button>
-                            <button onClick={() => router.push('/kelola_playlist/ubah_playlist')} className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Ubah</button>
-                            <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td className="border px-4 py-2">City of Evil</td>
-                        <td className="border px-4 py-2">6</td>
-                        <td className="border px-4 py-2">30</td>
-                        <td className="border px-4 py-2">
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Detail</button>
-                            <button className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Ubah</button>
-                            <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
-                        </td>
-                    </tr>
+                    
+                    {playlistData.map((song: any, index: number) => (
+                        <tr key={index}>
+                            <td className="border px-4 py-2">{song.judul_playlist}</td>
+                            <td className="border px-4 py-2">{song.jumlah_lagu}</td>
+                            <td className="border px-4 py-2">{song.total_durasi}</td>
+                            <td className="border px-4 py-2">
+                            <button onClick={() => router.push(`/kelola_playlist/detail_playlist/${song.id_user_playlist}`)} className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded">Detail</button>
+                            <button onClick={() => router.push(`/kelola_playlist/ubah_playlist/${song.id_user_playlist}`)}className="bg-green-500 hover:bg-green-700 text-white py-1 px-2 rounded ml-2">Ubah</button>
+                            <button  onClick={() =>handleDelete(song.id_user_playlist)} className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded ml-2">Hapus</button>
+                            </td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
             <div className="flex flex-col gap-8 w-full justify-center items-center">
-                <button onClick={() => router.push('/kelola_playlist/tambah_playlist')} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4">
+                <button onClick={() => router.push('/kelola_playlist/tambah_playlist/${id}')} className="bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg py-4 w-1/4">
                     Tambah Playlist
                 </button>
             </div>

@@ -24,8 +24,6 @@ const Navbar = () => {
     const { isAuthenticated, role, logout } = useAuth();
     const router = useRouter();
     const pathname = usePathname();
-
-
     const [isLoaded, setIsLoaded] = useState(false);
     useEffect(() => {
         setIsLoaded(true);
@@ -46,7 +44,7 @@ const Navbar = () => {
 
                     <h1 className="pl-2 text-center text-2xl font-bold text-[#1db954]">Marmut</h1>
                 </div>
-                <div className="flex gap-16 text-center items-center">
+                <div className="flex gap-14 text-center items-center">
                     {isLoaded &&
                         <>
                             {isAuthenticated ? (
@@ -59,39 +57,39 @@ const Navbar = () => {
                                             <NavLink href="/chart" isActive={pathname === "/chart"}>
                                                 Chart
                                             </NavLink>
-                                            <NavLink href="/search" isActive={pathname === "/search"}>
+                                            <NavLink href="/searchbar" isActive={pathname === "/searchbar"}>
                                                 Search Bar
                                             </NavLink>
-                                            <NavLink href="/playlist" isActive={pathname === "/playlist"}>
+                                            <NavLink href="/kelola_playlist" isActive={pathname === "/kelola_playlist"}>
                                                 Kelola Playlist
                                             </NavLink>
-                                            <NavLink href="/subscription" isActive={pathname === "/subscription"}>
+                                            <NavLink href="/langganan" isActive={pathname === "/langganan"}>
                                                 Langganan Paket
                                             </NavLink>
                                         </>
                                     )}
                                     {role.includes("premium") && (
-                                        <NavLink href="/downloaded-songs" isActive={pathname === "/downloaded-songs"}>
+                                        <NavLink href="/downloadedsongs" isActive={pathname === "/downloadedsongs"}>
                                             Kelola Downloaded Songs
                                         </NavLink>
                                     )}
                                     {role.includes("podcaster") && (
-                                        <NavLink href="/podcast/list" isActive={pathname === "/podcast/list"}>
+                                        <NavLink href="/podcast/create" isActive={pathname === "/podcast/create"}>
                                             Kelola Podcast
                                         </NavLink>
                                     )}
                                     {(role.includes("artist") || role.includes("songwriter")) && (
-                                        <NavLink href="/album-and-songs" isActive={pathname === "/album-and-songs"}>
+                                        <NavLink href="/kelola_album_song_as" isActive={pathname === "/kelola_album_song_as"}>
                                             Kelola Album & Songs
                                         </NavLink>
                                     )}
                                     {role.includes("label") && (
-                                        <NavLink href="/album" isActive={pathname === '/album'}>
+                                        <NavLink href="/kelola_album_song_l" isActive={pathname === '/kelola_album_song_l'}>
                                             Kelola Album
                                         </NavLink>
                                     )}
                                     {(role.includes("artist") || role.includes("songwriter") || role.includes("label")) && (
-                                        <NavLink href="/royalty" isActive={pathname === "/royalty"}>
+                                        <NavLink href="/royalti" isActive={pathname === "/royalti"}>
                                             Cek Royalti
                                         </NavLink>
                                     )}

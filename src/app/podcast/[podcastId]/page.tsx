@@ -1,27 +1,88 @@
 "use client"
-import React from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { getPodcastDetail } from '@/app/actions/getPodcastDetail';
+import { getPodcastGenre } from '@/app/actions/getPodcastGenre';
+import { getPodcastEpisode } from '@/app/actions/getPodcastEpisode';
+
+type PodcastDetailProps = {
+    judul: string;
+    nama: string;
+    tanggal_rilis: Date;
+    durasi: number;
+    tahun: number;
+}
+
+type EpisodeProps = {
+    judul: string;
+    deskripsi: string;
+    durasi: number;
+    tanggal_rilis: Date;
+}
+
+
 const PodcastDetail: React.FC = () => {
     const router = useRouter();
+    const params = useParams();
+    const { podcastId } = params;
+    const [podcastData, setPodcastData] = useState<PodcastDetailProps | null>(null);
+    const [genreData, setGenreData] = useState<string[] | null>(null);
+    const [episodeData, setEpisodeData] = useState<EpisodeProps[] | null>(null);
+
+    const getPodcastData = async () => {
+        try {
+            const [podcastData, genreData, episodeData] = await Promise.all([
+                getPodcastDetail(podcastId as string),
+                getPodcastGenre(podcastId as string),
+                getPodcastEpisode(podcastId as string)
+            ]);
+            setPodcastData(podcastData as PodcastDetailProps);
+            setGenreData(genreData as string[]);
+            setEpisodeData(episodeData as EpisodeProps[])
+
+        }
+        catch (error) {
+            console.error("Failed to get podcast data");
+        }
+    }
+
+
+    useEffect(() => {
+        getPodcastData()
+    }
+        , [podcastId])
+
+
+    function formatDuration(durasi: number) {
+        if (durasi) {
+            const hours = Math.floor(durasi / 60);
+            const minutes = durasi % 60;
+            return hours > 0 ? `${hours} jam ${minutes} menit` : `${minutes} menit`;
+
+        }
+    }
     return (
         <div className="flex flex-col text-white-100 px-20 py-16 min-h-screen ">
             <div className="px-20 py-16">
                 <h1 className="text-4xl font-bold mb-8">Podcast Detail</h1>
                 <div className='flex flex-col gap-4 text-lg'>
-                    <p>Judul: <span>Podcast1</span></p>
+                    <p>Judul: <span>{podcastData?.judul}</span></p>
                     <p>Genre(s):</p>
+
                     <ul className="list-disc pl-6">
-                        <li>Genre1</li>
-                        <li>Genre2</li>
+                        {genreData?.map((genre, index) => (
+                            <li key={index}>{genre}</li>
+                        ))}
                     </ul>
-                    <p>Podcaster: Artist1</p>
-                    <p>Total Durasi: 8 jam 20 menit</p>
-                    <p>Tanggal Rilis: 18/03/24</p>
-                    <p>Tahun: 2024</p>
+
+                    <p>Podcaster: {podcastData?.nama}</p>
+                    <p>Total Durasi: {formatDuration(podcastData?.durasi as number)}</p>
+                    <p>Tanggal Rilis: {podcastData?.tanggal_rilis.toLocaleDateString()}</p>
+                    <p>Tahun: {podcastData?.tahun}</p>
                     <div>
-                    <button className="px-8 py-2 bg-green-200 rounded-lg text-white-100" onClick={() => router.push("/")}>
-                        Back
-                    </button>
+                        <button className="px-8 py-2 bg-green-200 rounded-lg text-white-100" onClick={() => router.back()}>
+                            Back
+                        </button>
 
                     </div>
 
@@ -39,19 +100,14 @@ const PodcastDetail: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>SubJudul1</td>
-                            <td>Lorem Ipsum ...</td>
-                            <td>59 menit</td>
-                            <td>18/03/2024</td>
-                        </tr>
-                        <tr>
-                            <td>SubJudul2</td>
-                            <td>Lorem Ipsum ...</td>
-                            <td>1 jam 2 menit</td>
-                            <td>25/03/2024</td>
-                        </tr>
-                        {/* Add more episodes here */}
+                        {episodeData?.map((episode, index) => (
+                            <tr key={index}>
+                                <td>{episode.judul}</td>
+                                <td>{episode.deskripsi}</td>
+                                <td>{formatDuration(episode.durasi)}</td>
+                                <td>{episode.tanggal_rilis.toLocaleDateString()}</td>
+                            </tr>
+                        ))}
                     </tbody>
                 </table>
             </div>

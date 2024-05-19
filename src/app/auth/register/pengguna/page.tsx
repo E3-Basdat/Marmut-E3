@@ -3,9 +3,11 @@ import React, { useState } from "react";
 import { registerUser } from "@/app/actions/register";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+
+import { CheckEmailLabel } from "@/app/actions/checkEmailLabel";
 const Pengguna: React.FC = () => {
-    const[gender, setGender] = useState<string>("")
-    const[tanggal_lahir, setTanggalLahir] = useState<string>("")
+    const [gender, setGender] = useState<string>("")
+    const [tanggal_lahir, setTanggalLahir] = useState<string>("")
     const router = useRouter();
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -18,17 +20,26 @@ const Pengguna: React.FC = () => {
         }
         const formData = new FormData(event.target as HTMLFormElement);
 
-        try{
+
+        try {
+            const emailExistLabel = await CheckEmailLabel(formData.get('email') as string);
+
+            if (emailExistLabel) {
+                toast.error('Email already exists in Label');
+                return;
+            }
             await registerUser(formData);
+          
+
             toast.success("User registered successfully");
             router.replace("/auth/login");
         }
 
-        catch(err){
-            throw new Error(`Error: ${err}`);
+        catch (err: any) {
+            toast.error(err.message)
         }
-        
-        
+
+
     };
 
     return (
@@ -59,17 +70,17 @@ const Pengguna: React.FC = () => {
                 </div>
 
                 <div className='mb-4'>
-                <label>Tempat Lahir</label>
+                    <label>Tempat Lahir</label>
                     <input type="text" placeholder="Tempat Lahir" name="tempat_lahir" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
 
                 <div className='mb-4'>
-                <label>Tanggal Lahir</label>
+                    <label>Tanggal Lahir</label>
                     <input type="date" name="tanggal_lahir" placeholder="Tanggal Lahir" value={tanggal_lahir} onChange={(e) => setTanggalLahir(e.target.value)} className={`font-bold ${tanggal_lahir ? 'text-white-100' : 'text-gray-400'} bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4`} />
                 </div>
 
                 <div className='mb-4'>
-                <label>Kota Asal</label>
+                    <label>Kota Asal</label>
                     <input type="text" placeholder="Kota Asal" name="kota_asal" className="bg-primary border-2 border-gray-200 rounded-lg w-full py-4 px-4" />
                 </div>
 
@@ -80,11 +91,11 @@ const Pengguna: React.FC = () => {
                         <label>Podcaster</label>
                     </div>
                     <div className="flex flex-row gap-4">
-                        <input type="checkbox" name="is_artist"  />
+                        <input type="checkbox" name="is_artist" />
                         <label>Artist</label>
                     </div>
                     <div className="flex flex-row gap-4">
-                        <input type="checkbox" name="is_songwriter"/>
+                        <input type="checkbox" name="is_songwriter" />
                         <label>Songwriter</label>
                     </div>
                 </div>

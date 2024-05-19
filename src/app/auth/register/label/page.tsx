@@ -2,6 +2,7 @@
 import React from "react";
 import { registerLabel } from "@/app/actions/register";
 import toast from "react-hot-toast";
+import { CheckEmailAkun } from "@/app/actions/checkEmailAkun";
 const label : React.FC = () => {
 
     const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -9,11 +10,16 @@ const label : React.FC = () => {
         const formData = new FormData(e.target as HTMLFormElement);
         
         try {
+            const emailExistAkun = await CheckEmailAkun(formData.get('email') as string);
+            if (emailExistAkun) {
+                toast.error('Email already exists in Akun');
+                return;
+            }
             await registerLabel(formData);
             toast.success("Label registered successfully");
 
-          } catch (error) {
-            console.error("Failed to register label:", error);
+          } catch (error:any) {
+            toast.error(error.message)
           }
     }
 

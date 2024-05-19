@@ -1,14 +1,17 @@
 "use client"
+import { CreateEpisode } from "@/app/actions/CreateEpisode";
 import React, { useRef, useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { MdOutlineCancel } from "react-icons/md";
 
 interface ModalInputProps {
     isOpen: boolean;
     onClose: () => void;
     podcast: string;
+    podcastId: string;
 }
 
-const ModalInput: React.FC<ModalInputProps> = ({ isOpen, onClose, podcast }) => {
+const ModalInput: React.FC<ModalInputProps> = ({ isOpen, onClose, podcast,podcastId }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
@@ -23,17 +26,26 @@ const ModalInput: React.FC<ModalInputProps> = ({ isOpen, onClose, podcast }) => 
         onClose();
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
+
         const title = titleRef.current?.value;
         const description = descriptionRef.current?.value;
         const duration = durationRef.current?.value;
 
         if (!title || !description || !duration) {
-            alert("Please fill in all fields.");
+            toast.error("Please fill in all fields.");
             return;
         }
 
-        onClose();
+        try{
+            await CreateEpisode(title, description, duration, podcastId);
+            toast.success("Episode created successfully");
+            onClose();
+        }
+        catch(err){
+            console.error("Error creating episode", err);
+            toast.error("Error creating episode");
+        }
     };
 
     return (
