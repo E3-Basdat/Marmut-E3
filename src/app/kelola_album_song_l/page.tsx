@@ -48,8 +48,9 @@ const kelola_album_l: React.FC = () => {
     const handleDelete = async (judul: string) => {
         try {
             await deleteAlbum(judul);
-            toast.success("Album deleted");
+            toast.success("Song deleted");
             setAlbums(albums.filter(album => album.judul !== judul));
+            router.back();
         } catch (error) {
             console.error("Failed to delete album:", error);
             toast.error("Failed to delete album");
