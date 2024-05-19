@@ -14,7 +14,9 @@ interface SearchResult {
 const SearchBar = () => {
   const { isAuthenticated } = useAuth(); 
   const [query, setQuery] = useState("");
+  const [searchAttempted, setSearchAttempted] = useState(false);
   const [results, setResults] = useState<SearchResult[]>([]);
+  const [itemsSearched, setItemsSearched] = useState<string>();
   const router = useRouter();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -31,14 +33,16 @@ const SearchBar = () => {
   const handleSearch = async () => {
     if (!query) return;
     const response = await getSearch(query);
+    setItemsSearched(query)
     setResults(response.rows as SearchResult[]); 
+    setSearchAttempted(true);
   };
 
   const handleLihat = (item: SearchResult) => {
     if (item.type == "SONG"){
       router.push(`/detail_lagu/${item.id}`);
     } else if (item.type == "PODCAST") {     
-      router.push(`/detail_podcast/${item.id}`);
+      router.push(`/podcast/${item.id}`);
     } else {
       router.push(`/play_playlist/${item.id})}`);
     }
@@ -82,9 +86,9 @@ const SearchBar = () => {
                   </td>
                 </tr>
               ))}
-              {results.length === 0 && (
+              {searchAttempted&&results.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="py-2 px-4 text-center">Maaf, pencarian untuk "{query}" tidak ditemukan.</td>
+                  <td colSpan={4} className="py-2 px-4 text-center">Maaf, pencarian untuk "{itemsSearched}" tidak ditemukan.</td>
                 </tr>
               )}
             </tbody>
